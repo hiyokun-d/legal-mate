@@ -7,6 +7,7 @@ export interface TimelinePoint {
 export interface GeminiContractResult {
   metrics: { klausul: number };
   riskLevel: "Rendah" | "Sedang" | "Tinggi";
+  scamScore: number;
   verdict: {
     sah: boolean;
     pesanSah: string;
@@ -16,6 +17,7 @@ export interface GeminiContractResult {
   summary: string;
   redFlags: string[];
   recommendations: string[];
+  safetyChecklist: string[];
   timeline: TimelinePoint[];
 }
 

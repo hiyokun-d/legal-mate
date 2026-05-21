@@ -6,6 +6,7 @@ import { useState } from "react";
 
 interface RiskTimelineProps {
   timeline: TimelinePoint[];
+  printMode?: boolean;
 }
 
 const RISK = {
@@ -54,7 +55,7 @@ function lineColor(current: TimelinePoint, next: TimelinePoint | undefined) {
   return RISK[higher].line;
 }
 
-export default function RiskTimeline({ timeline }: RiskTimelineProps) {
+export default function RiskTimeline({ timeline, printMode = false }: RiskTimelineProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const counts = {
@@ -66,12 +67,12 @@ export default function RiskTimeline({ timeline }: RiskTimelineProps) {
   const toggle = (i: number) => setActiveIndex(activeIndex === i ? null : i);
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-black/20">
       {/* Header */}
-      <div className="px-4 pt-4 pb-3 border-b border-slate-100">
+      <div className="px-4 pt-4 pb-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-2 mb-3">
-          <Eye className="size-4 text-slate-400" />
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+          <Eye className="size-4 text-slate-400 dark:text-slate-500" />
+          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
             Peta Risiko Kontrak
           </p>
         </div>
@@ -103,7 +104,7 @@ export default function RiskTimeline({ timeline }: RiskTimelineProps) {
       <div className="px-4 py-3">
         {timeline.map((point, i) => {
           const cfg = RISK[point.risk];
-          const isActive = activeIndex === i;
+          const isActive = printMode || activeIndex === i;
           const isLast = i === timeline.length - 1;
           const isDimmed = activeIndex !== null && !isActive;
 
@@ -145,7 +146,7 @@ export default function RiskTimeline({ timeline }: RiskTimelineProps) {
                       />
                       <span
                         className={`text-sm truncate transition-colors ${
-                          isActive ? "font-semibold text-slate-800" : "text-slate-600 group-hover:text-slate-800"
+                          isActive ? "font-semibold text-slate-800 dark:text-slate-100" : "text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200"
                         }`}
                       >
                         {point.section}
