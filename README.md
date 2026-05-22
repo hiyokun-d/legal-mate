@@ -2,7 +2,11 @@
 
 ## Reason for the Project
 
-Legal Mate is an innovative project designed to empower Small and Medium-sized Enterprises (SMEs/UMKM) by providing advanced analysis of contract clauses and agreements. Our primary goal is to help SMEs identify potential risks and avoid significant financial losses before signing any legal documents. By leveraging the power of the GEMINI-3.5-flash model, Legal Mate offers a proactive approach to contract review, ensuring that businesses can make informed decisions and protect their interests.
+Legal Mate is an innovative project designed to empower Small and Medium-sized Enterprises (SMEs/UMKM) by providing advanced analysis of contract clauses and agreements. Our primary goal is to help SMEs identify potential risks and avoid significant financial losses before signing any legal documents.
+
+Powered by **Sada**, our intelligent AI legal assistant built on top of the **GEMINI-3.5-flash** model, Legal Mate delivers proactive and accessible contract analysis for everyday business owners. Sada is designed to detect unfair, ambiguous, or potentially harmful clauses hidden within legal documents, helping users better understand agreements before making important decisions.
+
+By leveraging modern AI technology, Legal Mate offers a smarter and more approachable way for SMEs to review contracts, reduce legal uncertainty, and protect their business interests with greater confidence.
 
 ## Project Structure
 
