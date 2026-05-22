@@ -37,6 +37,9 @@ export default function LandingPage() {
             <a href="#berita" className="hidden md:block text-sm text-slate-400 hover:text-white transition-colors">
               Berita Scam
             </a>
+            <Link href="/blacklist" className="hidden md:block text-sm text-red-400 hover:text-red-300 transition-colors font-medium">
+              🚨 Blacklist
+            </Link>
             <Link
               href="/app"
               className="flex items-center gap-1.5 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-semibold rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/25 active:scale-95"
