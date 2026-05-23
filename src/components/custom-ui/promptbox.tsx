@@ -1,9 +1,10 @@
 "use client";
 
-import { SadaAvatar } from "@/components/custom-ui/sada-avatar";
 import { motion } from "framer-motion";
 import { SendHorizontal } from "lucide-react";
-import React, { useRef, useState } from "react";
+import type React from "react";
+import { useRef, useState } from "react";
+import { SadaAvatar } from "@/components/custom-ui/sada-avatar";
 
 interface promptBoxProps {
   isDragging: boolean;
@@ -22,7 +23,10 @@ export default function PromptBox({ isDragging, onSubmit }: promptBoxProps) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSubmit(); }
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -53,7 +57,11 @@ export default function PromptBox({ isDragging, onSubmit }: promptBoxProps) {
         value={value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        placeholder={isDragging ? "Lepaskan file di atas..." : "Tanya Sada tentang kontrak ini..."}
+        placeholder={
+          isDragging
+            ? "Lepaskan file di atas..."
+            : "Tanya Sada tentang kontrak ini..."
+        }
         rows={1}
         className="flex-1 resize-none text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-600 outline-none bg-transparent max-h-36 overflow-y-auto leading-relaxed"
       />
@@ -63,7 +71,7 @@ export default function PromptBox({ isDragging, onSubmit }: promptBoxProps) {
         whileTap={{ scale: 0.9 }}
         onClick={handleSubmit}
         disabled={!value.trim()}
-        className="p-2.5 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white hover:from-emerald-400 hover:to-teal-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all shrink-0 shadow-sm shadow-emerald-500/30"
+        className="p-2.5 rounded-xl bg-linear-to-br from-emerald-500 to-teal-600 text-white hover:from-emerald-400 hover:to-teal-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all shrink-0 shadow-sm shadow-emerald-500/30"
       >
         <SendHorizontal className="size-4" />
       </motion.button>

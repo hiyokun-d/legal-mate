@@ -1,8 +1,14 @@
 "use client";
 
-import type { TimelinePoint } from "@/lib/types";
-import { AlertTriangle, CheckCircle2, ChevronDown, Eye, ShieldAlert } from "lucide-react";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  ChevronDown,
+  Eye,
+  ShieldAlert,
+} from "lucide-react";
 import { useState } from "react";
+import type { TimelinePoint } from "@/lib/types";
 
 interface RiskTimelineProps {
   timeline: TimelinePoint[];
@@ -51,11 +57,15 @@ const RISK = {
 function lineColor(current: TimelinePoint, next: TimelinePoint | undefined) {
   if (!next) return "bg-slate-100";
   const order = { tinggi: 3, sedang: 2, aman: 1 };
-  const higher = order[current.risk] >= order[next.risk] ? current.risk : next.risk;
+  const higher =
+    order[current.risk] >= order[next.risk] ? current.risk : next.risk;
   return RISK[higher].line;
 }
 
-export default function RiskTimeline({ timeline, printMode = false }: RiskTimelineProps) {
+export default function RiskTimeline({
+  timeline,
+  printMode = false,
+}: RiskTimelineProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const counts = {
@@ -124,7 +134,9 @@ export default function RiskTimeline({ timeline, printMode = false }: RiskTimeli
                     aria-label={`${point.section} — ${cfg.label}`}
                   />
                   {!isLast && (
-                    <div className={`w-0.5 flex-1 min-h-[24px] mt-1 ${lineColor(point, timeline[i + 1])}`} />
+                    <div
+                      className={`w-0.5 flex-1 min-h-6 mt-1 ${lineColor(point, timeline[i + 1])}`}
+                    />
                   )}
                 </div>
 
@@ -146,7 +158,9 @@ export default function RiskTimeline({ timeline, printMode = false }: RiskTimeli
                       />
                       <span
                         className={`text-sm truncate transition-colors ${
-                          isActive ? "font-semibold text-slate-800 dark:text-slate-100" : "text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200"
+                          isActive
+                            ? "font-semibold text-slate-800 dark:text-slate-100"
+                            : "text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200"
                         }`}
                       >
                         {point.section}
@@ -154,7 +168,9 @@ export default function RiskTimeline({ timeline, printMode = false }: RiskTimeli
                     </div>
 
                     <div className="flex items-center gap-1.5 shrink-0">
-                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${cfg.badge}`}>
+                      <span
+                        className={`text-xs font-medium px-2 py-0.5 rounded-full ${cfg.badge}`}
+                      >
                         {cfg.label}
                       </span>
                       <ChevronDown

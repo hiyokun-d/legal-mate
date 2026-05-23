@@ -23,8 +23,7 @@ function parseRSSItems(xml: string): NewsItem[] {
       item.match(/<title>([\s\S]*?)<\/title>/)?.[1] ??
       "";
 
-    const link =
-      item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ?? "";
+    const link = item.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.trim() ?? "";
 
     const pubDate =
       item.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1]?.trim() ??
@@ -50,7 +49,12 @@ function parseRSSItems(xml: string): NewsItem[] {
     const cleanTitle = title.replace(/\s*-\s*[^-]+$/, "").trim() || title;
     const cleanSource = source.replace(/<!\[CDATA\[|\]\]>/g, "").trim();
 
-    items.push({ title: cleanTitle, link, pubDate, source: cleanSource || "Berita" });
+    items.push({
+      title: cleanTitle,
+      link,
+      pubDate,
+      source: cleanSource || "Berita",
+    });
   }
 
   return items;
@@ -87,7 +91,10 @@ export async function GET() {
 
     const settled = await Promise.allSettled(queries.map(fetchQuery));
     const all = settled
-      .filter((r): r is PromiseFulfilledResult<NewsItem[]> => r.status === "fulfilled")
+      .filter(
+        (r): r is PromiseFulfilledResult<NewsItem[]> =>
+          r.status === "fulfilled",
+      )
       .flatMap((r) => r.value);
 
     const seen = new Set<string>();
@@ -100,7 +107,7 @@ export async function GET() {
     deduped.sort((a, b) => {
       const da = new Date(a.pubDate).getTime();
       const db = new Date(b.pubDate).getTime();
-      return isNaN(da) || isNaN(db) ? 0 : db - da;
+      return Number.isNaN(da) || Number.isNaN(db) ? 0 : db - da;
     });
 
     const data = deduped.slice(0, 15);

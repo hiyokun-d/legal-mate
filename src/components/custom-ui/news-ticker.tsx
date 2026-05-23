@@ -1,7 +1,7 @@
 "use client";
 
-import type { NewsItem } from "@/app/api/news/route";
 import { useEffect, useState } from "react";
+import type { NewsItem } from "@/app/api/news/route";
 
 export default function NewsTicker() {
   const [items, setItems] = useState<NewsItem[]>([]);
@@ -51,7 +51,9 @@ export default function NewsTicker() {
               >
                 <span className="text-red-300 mr-2">▸</span>
                 {item.title}
-                <span className="text-red-400 ml-2 font-medium">[{item.source}]</span>
+                <span className="text-red-400 ml-2 font-medium">
+                  [{item.source}]
+                </span>
               </a>
             ))}
           </div>

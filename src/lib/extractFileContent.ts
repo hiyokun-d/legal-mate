@@ -30,7 +30,13 @@ const DOCX_TYPES = new Set([
 export async function extractFileContent(file: File): Promise<FileContent> {
   if (BINARY_TYPES.has(file.type)) {
     const base64 = await toBase64(file);
-    return { kind: "binary", mimeType: file.type, base64, name: file.name, size: file.size };
+    return {
+      kind: "binary",
+      mimeType: file.type,
+      base64,
+      name: file.name,
+      size: file.size,
+    };
   }
 
   if (DOCX_TYPES.has(file.type)) {

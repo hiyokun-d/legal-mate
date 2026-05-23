@@ -1,18 +1,22 @@
 "use client";
 
-import AnalyzeConfirm from "@/components/custom-ui/analyze-confirm";
-import AnalyzeLoading from "@/components/custom-ui/analyze-loading";
-import AnalyzeResult from "@/components/custom-ui/analyze-result";
-import Dropzone from "@/components/custom-ui/dropzone";
-import PromptBox from "@/components/custom-ui/promptbox";
-import { extractFileContent, type FileContent } from "@/lib/extractFileContent";
-import type { ChatMessage, GeminiContractResult, GeminiLetterResult } from "@/lib/types";
-import { ThemeToggle } from "@/components/custom-ui/theme-toggle";
 import { AnimatePresence, motion } from "framer-motion";
 import { ShieldCheck, Zap } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
+import AnalyzeConfirm from "@/components/custom-ui/analyze-confirm";
+import AnalyzeLoading from "@/components/custom-ui/analyze-loading";
+import AnalyzeResult from "@/components/custom-ui/analyze-result";
+import Dropzone from "@/components/custom-ui/dropzone";
+import PromptBox from "@/components/custom-ui/promptbox";
+import { ThemeToggle } from "@/components/custom-ui/theme-toggle";
+import { extractFileContent, type FileContent } from "@/lib/extractFileContent";
+import type {
+  ChatMessage,
+  GeminiContractResult,
+  GeminiLetterResult,
+} from "@/lib/types";
 
 type AppState = "idle" | "ready" | "analyzing" | "done";
 
@@ -24,7 +28,8 @@ export default function Home() {
   const [files, setFiles] = useState<File[]>([]);
   const [fileContents, setFileContents] = useState<FileContent[]>([]);
 
-  const [analysisResult, setAnalysisResult] = useState<GeminiContractResult | null>(null);
+  const [analysisResult, setAnalysisResult] =
+    useState<GeminiContractResult | null>(null);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [isChatLoading, setChatLoading] = useState(false);
 
@@ -32,32 +37,42 @@ export default function Home() {
 
   const addTokens = (n: number) => setTotalTokens((prev) => prev + n);
 
-  const callAnalyzeAPI = (contents: FileContent[]): Promise<GeminiContractResult> =>
+  const callAnalyzeAPI = (
+    contents: FileContent[],
+  ): Promise<GeminiContractResult> =>
     fetch("/api/analyze", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ mode: "contract", fileContent: contents }),
-    }).then(async (r) => {
-      const data = await r.json();
-      if (!r.ok) throw new Error(data.error ?? "Gagal menganalisis dokumen.");
-      return data;
-    }).then((data) => {
-      const { _tokenUsage, ...result } = data;
-      addTokens(_tokenUsage ?? 0);
-      return result as GeminiContractResult;
-    });
+    })
+      .then(async (r) => {
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error ?? "Gagal menganalisis dokumen.");
+        return data;
+      })
+      .then((data) => {
+        const { _tokenUsage, ...result } = data;
+        addTokens(_tokenUsage ?? 0);
+        return result as GeminiContractResult;
+      });
 
   const handleFilesAdded = async (newFiles: File[]) => {
     const extracted = await Promise.all(
       newFiles.map(async (f) => {
-        try { return await extractFileContent(f); }
-        catch { toast.error(`Gagal membaca ${f.name}`); return null; }
-      })
+        try {
+          return await extractFileContent(f);
+        } catch {
+          toast.error(`Gagal membaca ${f.name}`);
+          return null;
+        }
+      }),
     );
 
     const validPairs = newFiles
       .map((f, i) => ({ file: f, content: extracted[i] }))
-      .filter((p): p is { file: File; content: FileContent } => p.content !== null);
+      .filter(
+        (p): p is { file: File; content: FileContent } => p.content !== null,
+      );
 
     if (validPairs.length === 0) return;
 
@@ -90,7 +105,9 @@ export default function Home() {
       setAnalysisResult(result);
       setAppState("done");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal menganalisis. Coba lagi.");
+      toast.error(
+        err instanceof Error ? err.message : "Gagal menganalisis. Coba lagi.",
+      );
       setAppState("ready");
     }
   }, []);
@@ -103,14 +120,24 @@ export default function Home() {
       const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: "chat", message: text, history: chatHistory }),
+        body: JSON.stringify({
+          mode: "chat",
+          message: text,
+          history: chatHistory,
+        }),
       });
-      const data: { reply: string; _tokenUsage?: number; error?: string } = await res.json();
+      const data: { reply: string; _tokenUsage?: number; error?: string } =
+        await res.json();
       if (!res.ok) throw new Error(data.error ?? "Gagal mengirim pesan.");
       addTokens(data._tokenUsage ?? 0);
-      setChatHistory((prev) => [...prev, { role: "assistant", content: data.reply }]);
+      setChatHistory((prev) => [
+        ...prev,
+        { role: "assistant", content: data.reply },
+      ]);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Gagal mengirim pesan. Coba lagi.");
+      toast.error(
+        err instanceof Error ? err.message : "Gagal mengirim pesan. Coba lagi.",
+      );
     } finally {
       setChatLoading(false);
     }
@@ -149,7 +176,9 @@ export default function Home() {
               <ShieldCheck className="size-3.5 text-white" />
             </div>
             <div>
-              <span className="text-sm font-bold text-slate-800 dark:text-slate-100">Legal Mate</span>
+              <span className="text-sm font-bold text-slate-800 dark:text-slate-100">
+                Legal Mate
+              </span>
               <span className="hidden sm:inline ml-2 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
                 by Sada AI
               </span>
@@ -168,7 +197,10 @@ export default function Home() {
                 >
                   <Zap className="size-3 text-emerald-500" />
                   <span className="text-xs tabular-nums font-medium text-slate-600 dark:text-slate-300">
-                    {totalTokens >= 1000 ? `${(totalTokens / 1000).toFixed(1)}K` : totalTokens} tokens
+                    {totalTokens >= 1000
+                      ? `${(totalTokens / 1000).toFixed(1)}K`
+                      : totalTokens}{" "}
+                    tokens
                   </span>
                 </motion.div>
               )}
@@ -261,7 +293,10 @@ export default function Home() {
               transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
               className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 z-50"
             >
-              <PromptBox isDragging={isDragging} onSubmit={handlePromptSubmit} />
+              <PromptBox
+                isDragging={isDragging}
+                onSubmit={handlePromptSubmit}
+              />
             </motion.div>
           )}
         </AnimatePresence>

@@ -1,5 +1,3 @@
-import NewsFeed from "@/components/custom-ui/news-feed";
-import NewsTicker from "@/components/custom-ui/news-ticker";
 import {
   AlertTriangle,
   ArrowRight,
@@ -13,11 +11,12 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
+import NewsFeed from "@/components/custom-ui/news-feed";
+import NewsTicker from "@/components/custom-ui/news-ticker";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
-
       {/* ── NAV ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -25,16 +24,24 @@ export default function LandingPage() {
             <div className="w-7 h-7 rounded-lg bg-emerald-500 flex items-center justify-center">
               <ShieldCheck className="size-4 text-white" />
             </div>
-            <span className="font-bold text-white tracking-tight">Legal Mate</span>
+            <span className="font-bold text-white tracking-tight">
+              Legal Mate
+            </span>
             <span className="hidden sm:inline-block text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full px-2 py-0.5 font-medium">
               by UMKM
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <a href="#cara-kerja" className="hidden md:block text-sm text-slate-400 hover:text-white transition-colors">
+            <a
+              href="#cara-kerja"
+              className="hidden md:block text-sm text-slate-400 hover:text-white transition-colors"
+            >
               Cara Kerja
             </a>
-            <a href="#berita" className="hidden md:block text-sm text-slate-400 hover:text-white transition-colors">
+            <a
+              href="#berita"
+              className="hidden md:block text-sm text-slate-400 hover:text-white transition-colors"
+            >
               Berita Scam
             </a>
             <Link href="/blacklist" className="hidden md:block text-sm text-red-400 hover:text-red-300 transition-colors font-medium">
@@ -69,8 +76,8 @@ export default function LandingPage() {
         />
 
         {/* Glow blobs */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-red-500/5 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-100 h-100 bg-red-500/5 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto space-y-8">
           {/* Badge */}
@@ -83,17 +90,27 @@ export default function LandingPage() {
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
             Jangan Tandatangani
             <br />
-            <span className="bg-gradient-to-r from-emerald-400 via-emerald-300 to-teal-300 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-emerald-400 via-emerald-300 to-teal-300 bg-clip-text text-transparent">
               Sebelum Tanya Sada
             </span>
           </h1>
 
           {/* Subtext */}
           <p className="text-lg text-slate-400 max-w-2xl leading-relaxed animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
-            Penasihat hukum AI khusus UMKM Indonesia. Upload kontrak, surat perjanjian,
-            atau screenshot chat — Sada deteksi <span className="text-red-400 font-medium">jebakan tersembunyi</span>,{" "}
-            <span className="text-amber-400 font-medium">klausul tidak adil</span>, dan{" "}
-            <span className="text-emerald-400 font-medium">modus manipulasi</span> dalam hitungan detik.
+            Penasihat hukum AI khusus UMKM Indonesia. Upload kontrak, surat
+            perjanjian, atau screenshot chat — Sada deteksi{" "}
+            <span className="text-red-400 font-medium">
+              jebakan tersembunyi
+            </span>
+            ,{" "}
+            <span className="text-amber-400 font-medium">
+              klausul tidak adil
+            </span>
+            , dan{" "}
+            <span className="text-emerald-400 font-medium">
+              modus manipulasi
+            </span>{" "}
+            dalam hitungan detik.
           </p>
 
           {/* CTAs */}
@@ -136,10 +153,15 @@ export default function LandingPage() {
               <AlertTriangle className="size-4 text-red-400" />
             </div>
             <div className="space-y-1">
-              <p className="text-xs font-bold text-red-400 uppercase tracking-wide">Red Flag Terdeteksi</p>
+              <p className="text-xs font-bold text-red-400 uppercase tracking-wide">
+                Red Flag Terdeteksi
+              </p>
               <p className="text-xs text-slate-300 leading-relaxed">
                 "Denda keterlambatan 5% per hari tanpa batas—{" "}
-                <span className="text-red-300">bisa hancurkan bisnis kamu dalam seminggu.</span>"
+                <span className="text-red-300">
+                  bisa hancurkan bisnis kamu dalam seminggu.
+                </span>
+                "
               </p>
             </div>
           </div>
@@ -152,11 +174,18 @@ export default function LandingPage() {
       </div>
 
       {/* ── HOW IT WORKS ── */}
-      <section id="cara-kerja" className="bg-slate-950 border-t border-slate-800 px-6 py-24">
+      <section
+        id="cara-kerja"
+        className="bg-slate-950 border-t border-slate-800 px-6 py-24"
+      >
         <div className="max-w-5xl mx-auto space-y-16">
           <div className="text-center space-y-3">
-            <p className="text-xs font-semibold text-emerald-500 uppercase tracking-widest">Cara Kerja</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white">Tiga Langkah. Selesai.</h2>
+            <p className="text-xs font-semibold text-emerald-500 uppercase tracking-widest">
+              Cara Kerja
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">
+              Tiga Langkah. Selesai.
+            </h2>
             <p className="text-slate-400 max-w-lg mx-auto">
               Tidak perlu latar belakang hukum. Tidak perlu bayar pengacara.
               Cukup upload dan biarkan Sada bekerja.
@@ -165,7 +194,7 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
             {/* Connector line */}
-            <div className="hidden md:block absolute top-12 left-[calc(33%-1rem)] right-[calc(33%-1rem)] h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
+            <div className="hidden md:block absolute top-12 left-[calc(33%-1rem)] right-[calc(33%-1rem)] h-px bg-linear-to-r from-transparent via-emerald-500/30 to-transparent" />
 
             {[
               {
@@ -181,7 +210,8 @@ export default function LandingPage() {
                 icon: <Bot className="size-6" />,
                 title: "AI Menganalisis",
                 desc: "Sada membaca setiap klausul, mendeteksi modus manipulasi, dan membandingkan isi chat dengan kontrak tertulis.",
-                color: "from-emerald-500/20 to-emerald-600/5 border-emerald-500/20",
+                color:
+                  "from-emerald-500/20 to-emerald-600/5 border-emerald-500/20",
                 iconColor: "text-emerald-400 bg-emerald-500/10",
               },
               {
@@ -189,21 +219,26 @@ export default function LandingPage() {
                 icon: <FileText className="size-6" />,
                 title: "Terima Laporan + Tindakan",
                 desc: "Laporan lengkap: ringkasan, red flags, rekomendasi, timeline risiko. Plus buat surat keberatan otomatis.",
-                color: "from-purple-500/20 to-purple-600/5 border-purple-500/20",
+                color:
+                  "from-purple-500/20 to-purple-600/5 border-purple-500/20",
                 iconColor: "text-purple-400 bg-purple-500/10",
               },
             ].map(({ step, icon, title, desc, color, iconColor }) => (
               <div
                 key={step}
-                className={`relative flex flex-col gap-5 p-6 rounded-2xl bg-gradient-to-br border ${color}`}
+                className={`relative flex flex-col gap-5 p-6 rounded-2xl bg-linear-to-br border ${color}`}
               >
                 <div className="absolute -top-3 -left-3 w-7 h-7 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400">
                   {step}
                 </div>
-                <div className={`p-3 rounded-xl w-fit ${iconColor}`}>{icon}</div>
+                <div className={`p-3 rounded-xl w-fit ${iconColor}`}>
+                  {icon}
+                </div>
                 <div className="space-y-2">
                   <h3 className="font-bold text-white">{title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">{desc}</p>
+                  <p className="text-sm text-slate-400 leading-relaxed">
+                    {desc}
+                  </p>
                 </div>
               </div>
             ))}
@@ -215,8 +250,12 @@ export default function LandingPage() {
       <section className="bg-slate-900 border-t border-slate-800 px-6 py-24">
         <div className="max-w-5xl mx-auto space-y-12">
           <div className="text-center space-y-3">
-            <p className="text-xs font-semibold text-emerald-500 uppercase tracking-widest">Kemampuan</p>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white">Sada Bisa Apa Saja?</h2>
+            <p className="text-xs font-semibold text-emerald-500 uppercase tracking-widest">
+              Kemampuan
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">
+              Sada Bisa Apa Saja?
+            </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -271,7 +310,9 @@ export default function LandingPage() {
                 <div className={`${accent}`}>{icon}</div>
                 <div className="space-y-1.5">
                   <h3 className="font-semibold text-white text-sm">{title}</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">{desc}</p>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {desc}
+                  </p>
                 </div>
               </div>
             ))}
@@ -288,12 +329,14 @@ export default function LandingPage() {
           </div>
           <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
             Kamu Tidak Perlu Jadi
-            <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
-              {" "}Korban Berikutnya
+            <span className="bg-linear-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+              {" "}
+              Korban Berikutnya
             </span>
           </h2>
           <p className="text-slate-400 text-lg">
-            Analisis kontrak pertamamu gratis. Tidak perlu daftar. Tidak perlu kartu kredit.
+            Analisis kontrak pertamamu gratis. Tidak perlu daftar. Tidak perlu
+            kartu kredit.
           </p>
           <Link
             href="/app"
@@ -315,13 +358,19 @@ export default function LandingPage() {
             <div className="w-5 h-5 rounded-md bg-emerald-500 flex items-center justify-center">
               <ShieldCheck className="size-3 text-white" />
             </div>
-            <span className="text-sm font-semibold text-slate-400">Legal Mate</span>
+            <span className="text-sm font-semibold text-slate-400">
+              Legal Mate
+            </span>
           </div>
           <p className="text-xs text-slate-600 text-center">
-            Penasihat hukum AI untuk UMKM Indonesia · Bukan pengganti pengacara profesional
+            Penasihat hukum AI untuk UMKM Indonesia · Bukan pengganti pengacara
+            profesional
           </p>
           <div className="flex items-center gap-4">
-            <Link href="/app" className="text-xs text-slate-500 hover:text-white transition-colors">
+            <Link
+              href="/app"
+              className="text-xs text-slate-500 hover:text-white transition-colors"
+            >
               Buka Aplikasi
             </Link>
           </div>

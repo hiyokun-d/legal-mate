@@ -1,10 +1,11 @@
 "use client";
 
-import { ValidFileType } from "@/lib/validTypeFiles";
 import { AnimatePresence, motion } from "framer-motion";
 import { FileText, Plus, UploadCloud, X } from "lucide-react";
-import React, { useRef, useState } from "react";
+import type React from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { ValidFileType } from "@/lib/validTypeFiles";
 
 interface DropzoneProps {
   files: File[];
@@ -31,18 +32,26 @@ export default function Dropzone({
     onDraggingChange?.(val);
   };
 
-  const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); setDraggingState(true); };
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDraggingState(true);
+  };
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
-    if (!e.currentTarget.contains(e.relatedTarget as Node)) setDraggingState(false);
+    if (!e.currentTarget.contains(e.relatedTarget as Node))
+      setDraggingState(false);
   };
   const handleDragDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setDraggingState(false);
-    if (e.dataTransfer.files?.length > 0) validateAndAdd(Array.from(e.dataTransfer.files));
+    if (e.dataTransfer.files?.length > 0)
+      validateAndAdd(Array.from(e.dataTransfer.files));
   };
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.length) { validateAndAdd(Array.from(e.target.files)); e.target.value = ""; }
+    if (e.target.files?.length) {
+      validateAndAdd(Array.from(e.target.files));
+      e.target.value = "";
+    }
   };
 
   const validateAndAdd = (incoming: File[]) => {
@@ -50,10 +59,15 @@ export default function Dropzone({
     const existingNames = new Set(files.map((f) => f.name));
     for (const file of incoming) {
       if (!ValidFileType.includes(file.type)) {
-        toast.error(`Format tidak didukung: ${file.name}`, { description: "Gunakan PDF, DOCX, JPG, atau PNG." });
+        toast.error(`Format tidak didukung: ${file.name}`, {
+          description: "Gunakan PDF, DOCX, JPG, atau PNG.",
+        });
         continue;
       }
-      if (existingNames.has(file.name)) { toast.info(`File sudah ada: ${file.name}`); continue; }
+      if (existingNames.has(file.name)) {
+        toast.info(`File sudah ada: ${file.name}`);
+        continue;
+      }
       valid.push(file);
     }
     if (valid.length > 0) onFilesAdded(valid);
@@ -67,7 +81,8 @@ export default function Dropzone({
       transition={{ layout: { duration: 0.5, ease: [0.4, 0, 0.2, 1] } }}
       className={`relative w-full min-h-screen flex flex-col items-center gap-4 p-6 transition-colors duration-300 ${
         compact ? "justify-start pt-8" : "justify-center pb-32"
-      } ${isDragging
+      } ${
+        isDragging
           ? "bg-emerald-50/60 dark:bg-emerald-950/20"
           : "bg-slate-50 dark:bg-slate-950"
       }`}
@@ -113,14 +128,17 @@ export default function Dropzone({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 rounded-3xl bg-gradient-to-br from-emerald-400/10 to-teal-400/5 pointer-events-none"
+                  className="absolute inset-0 rounded-3xl bg-linear-to-br from-emerald-400/10 to-teal-400/5 pointer-events-none"
                 />
               )}
             </AnimatePresence>
 
             <div className="flex flex-col items-center justify-center space-y-5">
               <motion.div
-                animate={{ scale: isDragging ? 1.2 : 1, rotate: isDragging ? 5 : 0 }}
+                animate={{
+                  scale: isDragging ? 1.2 : 1,
+                  rotate: isDragging ? 5 : 0,
+                }}
                 transition={{ type: "spring", stiffness: 260, damping: 18 }}
                 className={`p-5 rounded-2xl transition-colors ${
                   isDragging
@@ -133,7 +151,9 @@ export default function Dropzone({
 
               <div className="space-y-2">
                 <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                  <span className="text-emerald-600 dark:text-emerald-400">Klik untuk mengunggah</span>{" "}
+                  <span className="text-emerald-600 dark:text-emerald-400">
+                    Klik untuk mengunggah
+                  </span>{" "}
                   atau seret file ke sini
                 </p>
                 <p className="text-xs text-slate-400 dark:text-slate-500">
@@ -175,8 +195,12 @@ export default function Dropzone({
                         <FileText className="size-4" />
                       </div>
                       <div className="truncate text-left">
-                        <p className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate">{file.name}</p>
-                        <p className="text-xs text-slate-400 dark:text-slate-500">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+                        <p className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate">
+                          {file.name}
+                        </p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500">
+                          {(file.size / (1024 * 1024)).toFixed(2)} MB
+                        </p>
                       </div>
                     </div>
                     <motion.button

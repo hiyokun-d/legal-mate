@@ -30,11 +30,7 @@ export default function TokenWidget({ totalTokens }: TokenWidgetProps) {
   }, []);
 
   const barColor =
-    pct > 80
-      ? "bg-red-400"
-      : pct > 50
-        ? "bg-amber-400"
-        : "bg-emerald-400";
+    pct > 80 ? "bg-red-400" : pct > 50 ? "bg-amber-400" : "bg-emerald-400";
 
   const textColor =
     pct > 80
@@ -48,7 +44,9 @@ export default function TokenWidget({ totalTokens }: TokenWidgetProps) {
       <div className="bg-white/90 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-sm px-3 py-2.5 w-44 space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <Zap className={`size-3 ${textColor} transition-colors duration-500`} />
+            <Zap
+              className={`size-3 ${textColor} transition-colors duration-500`}
+            />
             <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
               Tokens
             </span>

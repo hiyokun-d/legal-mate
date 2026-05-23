@@ -1,138 +1,76 @@
-<div align="center">
+# Legal Mate
 
-<img src="public/juaravibecoding-banner.jpg" alt="#JuaraVibeCoding Banner" width="400"/>
+## Reason for the Project
 
-# UMKM Legal Mate
+Legal Mate is an innovative project designed to empower Small and Medium-sized Enterprises (SMEs/UMKM) by providing advanced analysis of contract clauses and agreements. Our primary goal is to help SMEs identify potential risks and avoid significant financial losses before signing any legal documents.
 
-**AI-powered legal contract analysis for Indonesian SMEs**
+Powered by **Sada**, our intelligent AI legal assistant built on top of the **GEMINI-3.5-flash** model, Legal Mate delivers proactive and accessible contract analysis for everyday business owners. Sada is designed to detect unfair, ambiguous, or potentially harmful clauses hidden within legal documents, helping users better understand agreements before making important decisions.
 
-[![Next.js](https://img.shields.io/badge/Next.js-14/15-black?logo=next.js)](https://nextjs.org)
-[![Google Gemini](https://img.shields.io/badge/Gemini-1.5_Flash-blue?logo=google)](https://ai.google.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript)](https://typescriptlang.org)
-[![Docker](https://img.shields.io/badge/Deploy-Cloud_Run-4285F4?logo=google-cloud)](https://cloud.google.com/run)
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Cloud_Run-34A853?logo=google-cloud)](https://sada-888877825528.asia-southeast1.run.app)
-
-> Built for **#JuaraVibeCoding 2026** — Google for Developers Vibe Coding Study Jam
-> _"Code Less, Build More"_
-
-</div>
-
----
-
-## Why I Built This
-
-Indonesian SMEs (UMKM) often sign contracts without fully understanding the legal implications — not because they're careless, but because legal language is dense, expensive to review, and inaccessible. A single bad contract clause can cost a small business everything.
-
-This project was born from that gap. **UMKM Legal Mate** uses Google Gemini AI to analyze contracts uploaded as text, image, or PDF — surfacing plain-language summaries, red flags, and actionable recommendations in seconds.
-
-The #JuaraVibeCoding Study Jam gave me the push to actually ship it. The principle: *you don't need to write every line from scratch — you need a clear vision and the right tools.* AI handles the boilerplate; I focus on the problem worth solving.
-
----
-
-## Features
-
-- **Multi-format input** — paste text, upload images, or drop a PDF
-- **AI risk analysis** — Gemini 1.5 Flash identifies risky clauses and explains them simply
-- **Red flag detection** — highlights problematic terms with severity levels
-- **Actionable recommendations** — tells you what to negotiate or reject
-- **UMKM-focused language** — outputs in plain Indonesian, not legalese
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 14/15 (App Router) |
-| Language | TypeScript (strict) |
-| Styling | Tailwind CSS + shadcn/ui |
-| AI Engine | Google Gemini 1.5 Flash (`@google/generative-ai`) |
-| Deployment | Docker → Google Cloud Run |
-
----
-
-## Live Demo
-
-**[https://sada-888877825528.asia-southeast1.run.app](https://sada-888877825528.asia-southeast1.run.app)**
-
-Deployed on Google Cloud Run (asia-southeast1). Built and generated via Google AI Studio.
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- A Google Gemini API key ([get one here](https://ai.google.dev))
-
-### Local Development
-
-```bash
-# Install dependencies
-npm install
-
-# Set up environment variables
-cp .env.example .env.local
-# Add your GEMINI_API_KEY to .env.local
-
-# Run dev server
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
-### Docker
-
-```bash
-# Build image
-docker build -t gcr.io/PROJECT_ID/legal-mate .
-
-# Deploy to Cloud Run
-gcloud run deploy legal-mate \
-  --image gcr.io/PROJECT_ID/legal-mate \
-  --platform managed \
-  --region asia-southeast2 \
-  --allow-unauthenticated
-```
-
----
+By leveraging modern AI technology, Legal Mate offers a smarter and more approachable way for SMEs to review contracts, reduce legal uncertainty, and protect their business interests with greater confidence.
 
 ## Project Structure
 
-```
-src/
-├── app/
-│   ├── api/analyze/route.ts   # Gemini API endpoint
-│   └── page.tsx               # Main UI
-├── components/
-│   ├── ui/                    # shadcn/ui base components
-│   └── custom-ui/             # App-specific components
-└── lib/
-    ├── gemini.ts              # Gemini SDK config
-    └── types.ts               # Shared TypeScript types
-```
+This project follows a standard Next.js application structure with a clear separation of concerns:
 
----
+- `public/`: Static assets such as images and favicons.
+- `src/app/`:
+    - `api/`: Contains API routes for backend functionalities:
+        - `analyze/`: Endpoint for contract analysis.
+        - `check/`: Endpoint for checking specific clauses or conditions.
+        - `news/`: Endpoint for fetching relevant legal news or updates.
+    - `(root)`: Next.js pages, including `layout.tsx` for global UI and `page.tsx` for the main application entry points.
+    - `globals.css`: Global styles for the application.
+- `src/components/`: Reusable UI components.
+    - `custom-ui/`: Application-specific UI components, such as `analyze-confirm.tsx`, `dropzone.tsx`, `news-feed.tsx`, etc.
+    - `ui/`: Generic, atomic UI components (e.g., `button.tsx`, `card.tsx`) based on a UI library (likely Shadcn UI, given the file names).
+- `src/lib/`: Utility functions, types, and helpers:
+    - `convertFiletoBase64.ts`: Utility for converting files to Base64 format.
+    - `extractFileContent.ts`: Logic for extracting content from various file types.
+    - `types.ts`: TypeScript type definitions.
+    - `utils.ts`: General utility functions.
+    - `validTypeFiles.ts`: Logic for validating allowed file types.
 
-## Competition Context
+## How to do Local Development
 
-This project is my submission for **[#JuaraVibeCoding 2026](https://goo.gle/juaravibecoding)** — a Vibe Coding Study Jam by Google for Developers Indonesia.
+To set up and run Legal Mate locally, follow these steps:
 
-The program teaches AI-assisted development with **Gemini** and **Vertex AI**, encouraging developers to build real solutions faster using the "Code Less, Build More" philosophy.
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/hiyokun-d/legal-mate
+    cd legal-mate
+    ```
 
-**Submission deadline:** 31 May 2026
+2.  **Install dependencies:**
+    This project uses `bun` for package management. Ensure you have `bun` installed.
+    ```bash
+    bun install
+    ```
+    If you prefer `npm` or `yarn`, you can use:
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
 
----
+3.  **Set up environment variables:**
+    Create a `.env.local` file in the root directory and add your environment variables.
+    For example, you might need to configure your API key for the GEMINI-3.5-flash model:
+    ```
+    GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+    ```
 
-## License
+4.  **Run the development server:**
+    ```bash
+    bun dev
+    ```
+    Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-MIT
-
----
-
-<div align="center">
-
-Built with Gemini AI · #JuaraVibeCoding · #GoogleForDevelopers · #BangkitBersamaAI
-
-</div>
+5.  **Run tests (if available):**
+    If the project includes tests, you can run them using:
+    ```bash
+    bun test
+    # or
+    npm test
+    # or
+    yarn test
+    ```

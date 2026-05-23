@@ -1,8 +1,8 @@
 "use client";
 
-import { SadaAvatar } from "@/components/custom-ui/sada-avatar";
 import { motion } from "framer-motion";
 import { ArrowRight, FileSearch, ShieldCheck, Zap } from "lucide-react";
+import { SadaAvatar } from "@/components/custom-ui/sada-avatar";
 
 interface analyzeConfirmProps {
   onConfirm: () => void;
@@ -28,7 +28,8 @@ export default function AnalyzeConfirm({ onConfirm }: analyzeConfirmProps) {
             Hai! Sada siap memeriksa dokumenmu.
           </p>
           <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-            Sada akan membaca setiap klausul dan memberi tahu kamu bagian mana yang berbahaya sebelum kamu tanda tangan.
+            Sada akan membaca setiap klausul dan memberi tahu kamu bagian mana
+            yang berbahaya sebelum kamu tanda tangan.
           </p>
         </div>
       </div>
@@ -56,7 +57,7 @@ export default function AnalyzeConfirm({ onConfirm }: analyzeConfirmProps) {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.97 }}
         onClick={onConfirm}
-        className="group w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-sm font-semibold rounded-2xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40"
+        className="group w-full py-3 bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-sm font-semibold rounded-2xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40"
       >
         Mulai Analisis dengan Sada
         <motion.span
