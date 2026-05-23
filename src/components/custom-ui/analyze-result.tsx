@@ -1,5 +1,9 @@
 "use client";
 
+import type { GeminiContractResult, ChatMessage, GeminiLetterResult } from "@/lib/types";
+import RiskTimeline from "@/components/custom-ui/risk-timeline";
+import RiskCalculator from "@/components/custom-ui/risk-calculator";
+import BlacklistForm from "@/components/custom-ui/blacklist-form";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertTriangle,
@@ -7,12 +11,14 @@ import {
   ClipboardCheck,
   Copy,
   Download,
+  ExternalLink,
   FileText,
   Info,
   Loader2,
   Mail,
   MessageSquare,
   Share2,
+  ShieldAlert,
   XCircle,
 } from "lucide-react";
 import { useRef, useState } from "react";
@@ -83,6 +89,7 @@ export default function AnalyzeResult({
   const [letterLoading, setLetterLoading] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [showBlacklist, setShowBlacklist] = useState(false);
   const printRef = useRef<HTMLDivElement>(null);
 
   const score = data.scamScore ?? 0;
@@ -220,6 +227,15 @@ export default function AnalyzeResult({
             icon: <Copy className="size-3.5" />,
             label: "Salin",
             cls: "text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700",
+          },
+          {
+            onClick: () => setShowBlacklist((v) => !v),
+            disabled: false,
+            icon: <ShieldAlert className="size-3.5" />,
+            label: "Laporkan",
+            cls: score >= 70
+              ? "text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900 hover:bg-red-100 dark:hover:bg-red-900/40 animate-pulse"
+              : "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900 hover:bg-red-100",
           },
         ].map(({ onClick, disabled, icon, label, cls }) => (
           <motion.button
@@ -494,7 +510,43 @@ export default function AnalyzeResult({
             </p>
           </motion.div>
         )}
+
+        {/* Risk Calculator */}
+        <motion.div variants={stagger.item} transition={itemTransition}>
+          <RiskCalculator data={data} />
+        </motion.div>
       </motion.div>
+
+      {/* Blacklist form (outside PDF capture area) */}
+      <AnimatePresence>
+        {showBlacklist && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="bg-white dark:bg-slate-900 border-2 border-red-200 dark:border-red-900/50 rounded-2xl p-4 shadow-sm dark:shadow-black/20 space-y-3">
+              <BlacklistForm
+                prefillModus={data.redFlags.slice(0, 2).join(". ")}
+                prefillScamScore={data.scamScore}
+                onSuccess={() => setShowBlacklist(false)}
+              />
+              <div className="flex items-center justify-center">
+                <a
+                  href="/blacklist"
+                  target="_blank"
+                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-emerald-500 transition-colors"
+                >
+                  <ExternalLink className="size-3" />
+                  Lihat semua laporan komunitas
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Letter */}
       <AnimatePresence>
