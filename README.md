@@ -133,6 +133,6 @@ MIT
 
 <div align="center">
 
-Built with Gemini AI · #JuaraVibeCoding · #GoogleForDevelopers · #BangkitBersamaAI
+Built with Gemini AI · #JuaraVibeCoding · #GoogleForDevelopers · #BangkitBersamaAI ·#BantuUmkm
 
 </div>
