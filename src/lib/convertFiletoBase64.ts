@@ -4,7 +4,7 @@ export async function convertToBase64(file: File) {
     reader.readAsDataURL(file);
 
     reader.onload = () => {
-      if (typeof reader.result === "string") {
+      if (typeof reader.result == "string") {
         // remove the prefix "data:image/png;base64," so the we just have the normal data
         const base64 = reader.result.split(",")[1];
         resolve(base64);

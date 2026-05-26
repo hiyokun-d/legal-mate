@@ -1,8 +1,8 @@
 "use client";
 
+import { SadaAvatar } from "@/components/custom-ui/sada-avatar";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { SadaAvatar } from "@/components/custom-ui/sada-avatar";
 
 const steps = [
   "Membaca dan mengekstrak teks dokumen...",
@@ -21,14 +21,9 @@ function ThinkingDots() {
       {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
-          className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 block"
+          className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400 block"
           animate={{ y: [0, -5, 0], opacity: [0.4, 1, 0.4] }}
-          transition={{
-            repeat: Infinity,
-            duration: 1,
-            delay: i * 0.18,
-            ease: "easeInOut",
-          }}
+          transition={{ repeat: Infinity, duration: 1, delay: i * 0.18, ease: "easeInOut" }}
         />
       ))}
     </div>
@@ -38,15 +33,10 @@ function ThinkingDots() {
 export default function AnalyzeLoading({ onComplete }: analyzeLoadingProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const onCompleteRef = useRef(onComplete);
-  useEffect(() => {
-    onCompleteRef.current = onComplete;
-  }, [onComplete]);
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
 
   useEffect(() => {
-    if (currentStep >= steps.length) {
-      onCompleteRef.current();
-      return;
-    }
+    if (currentStep >= steps.length) { onCompleteRef.current(); return; }
     const t = setTimeout(() => setCurrentStep((p) => p + 1), 700);
     return () => clearTimeout(t);
   }, [currentStep]);
@@ -58,7 +48,7 @@ export default function AnalyzeLoading({ onComplete }: analyzeLoadingProps) {
       {/* Progress bar top */}
       <div className="h-1 bg-slate-100 dark:bg-slate-800">
         <motion.div
-          className="h-full bg-linear-to-r from-emerald-500 to-teal-500"
+          className="h-full bg-gradient-to-r from-amber-500 to-amber-600"
           initial={{ width: "0%" }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.6, ease: "easeOut" }}
@@ -70,7 +60,7 @@ export default function AnalyzeLoading({ onComplete }: analyzeLoadingProps) {
         <div className="flex items-center gap-3">
           <SadaAvatar size="md" pulse glow />
           <div className="space-y-0.5">
-            <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+            <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest">
               Sada · Sedang Bekerja
             </p>
             <div className="flex items-center gap-2">
@@ -100,47 +90,31 @@ export default function AnalyzeLoading({ onComplete }: analyzeLoadingProps) {
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 14,
-                      }}
-                      className="w-4 h-4 rounded-full bg-emerald-500 dark:bg-emerald-500 flex items-center justify-center"
+                      transition={{ type: "spring", stiffness: 400, damping: 14 }}
+                      className="w-4 h-4 rounded-full bg-amber-500 dark:bg-amber-500 flex items-center justify-center"
                     >
-                      <svg
-                        className="w-2.5 h-2.5 text-white"
-                        fill="none"
-                        viewBox="0 0 12 12"
-                      >
-                        <path
-                          d="M2 6l3 3 5-5"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
+                      <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 12 12">
+                        <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </motion.div>
                   ) : active ? (
                     <motion.div
                       animate={{ scale: [1, 1.25, 1], opacity: [0.7, 1, 0.7] }}
                       transition={{ repeat: Infinity, duration: 1.2 }}
-                      className="w-3 h-3 rounded-full bg-emerald-400 dark:bg-emerald-500"
+                      className="w-3 h-3 rounded-full bg-amber-400 dark:bg-amber-500"
                     />
                   ) : (
                     <div className="w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-700" />
                   )}
                 </div>
 
-                <p
-                  className={`text-sm transition-all duration-300 ${
-                    done
-                      ? "text-slate-300 dark:text-slate-600 line-through"
-                      : active
-                        ? "text-slate-800 dark:text-slate-100 font-semibold"
-                        : "text-slate-300 dark:text-slate-600"
-                  }`}
-                >
+                <p className={`text-sm transition-all duration-300 ${
+                  done
+                    ? "text-slate-300 dark:text-slate-600 line-through"
+                    : active
+                      ? "text-slate-800 dark:text-slate-100 font-semibold"
+                      : "text-slate-300 dark:text-slate-600"
+                }`}>
                   {step}
                 </p>
               </motion.div>

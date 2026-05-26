@@ -15,7 +15,7 @@ export default function BlacklistPage() {
   return (
     <>
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-sm border-b border-slate-100 dark:border-slate-800">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/85 dark:bg-[#0A0805]/90 backdrop-blur-xl border-b border-amber-500/10 dark:border-amber-500/15">
         <div className="flex items-center justify-between px-4 h-14">
           <div className="flex items-center gap-3">
             <Link
@@ -27,7 +27,7 @@ export default function BlacklistPage() {
             </Link>
             <div className="w-px h-4 bg-slate-200 dark:bg-slate-700" />
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-md bg-red-500 flex items-center justify-center">
+              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center shadow-sm shadow-red-500/30">
                 <ShieldAlert className="size-3.5 text-white" />
               </div>
               <span className="text-sm font-bold text-slate-800 dark:text-slate-100">
@@ -42,7 +42,7 @@ export default function BlacklistPage() {
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl transition-all active:scale-95 ${
                 showForm
                   ? "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
-                  : "bg-red-500 hover:bg-red-400 text-white"
+                  : "bg-red-500 hover:bg-red-400 text-white shadow-md shadow-red-500/20"
               }`}
             >
               {showForm ? (

@@ -1,26 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Oxanium } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { Providers } from "@/components/providers";
-import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
+import { Providers } from "@/components/providers";
 
-const oxanium = Oxanium({ subsets: ["latin"], variable: "--font-sans" });
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Legal checker",
+  title: "Legal Mate by Sada AI — Penasihat Hukum AI untuk UMKM Indonesia",
   description:
-    "Check the legal document first before act, remember yours business is more important than his time",
+    "Upload kontrak, surat perjanjian, atau screenshot chat. Sada deteksi jebakan tersembunyi, klausul tidak adil, dan modus manipulasi dalam hitungan detik. Gratis untuk UMKM Indonesia.",
+  keywords: ["kontrak", "hukum", "UMKM", "Indonesia", "AI", "analisis kontrak", "perlindungan bisnis"],
 };
 
 export default function RootLayout({
@@ -30,16 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="id"
       suppressHydrationWarning
-      className={cn(
-        "h-full",
-        "antialiased",
-        geistSans.variable,
-        geistMono.variable,
-        "font-sans",
-        oxanium.variable,
-      )}
+      className={cn("h-full antialiased", inter.variable, "font-sans")}
     >
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <Providers>

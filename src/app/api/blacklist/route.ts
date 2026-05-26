@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { validateToken } from "@/app/api/token/route";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -54,6 +55,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const { valid, error } = validateToken(req);
+  if (!valid) return NextResponse.json({ error: error ?? "Unauthorized." }, { status: 401 });
+
   try {
     const body = await req.json();
     const { nama, jenis, modus, lokasi, kontak, scam_score } = body;
@@ -104,6 +108,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const { valid, error } = validateToken(req);
+  if (!valid) return NextResponse.json({ error: error ?? "Unauthorized." }, { status: 401 });
+
   try {
     const { id } = await req.json();
     if (!id) return NextResponse.json({ error: "ID wajib." }, { status: 400 });

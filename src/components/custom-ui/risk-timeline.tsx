@@ -1,14 +1,8 @@
 "use client";
 
-import {
-  AlertTriangle,
-  CheckCircle2,
-  ChevronDown,
-  Eye,
-  ShieldAlert,
-} from "lucide-react";
-import { useState } from "react";
 import type { TimelinePoint } from "@/lib/types";
+import { AlertTriangle, CheckCircle2, ChevronDown, Eye, ShieldAlert } from "lucide-react";
+import { useState } from "react";
 
 interface RiskTimelineProps {
   timeline: TimelinePoint[];
@@ -41,12 +35,12 @@ const RISK = {
     pulse: false,
   },
   aman: {
-    dot: "bg-emerald-500",
-    ring: "ring-emerald-100",
-    badge: "bg-emerald-50 text-emerald-600 border border-emerald-200",
-    line: "bg-gradient-to-b from-emerald-200 to-slate-100",
-    card: "bg-emerald-50 border-emerald-200",
-    text: "text-emerald-700",
+    dot: "bg-amber-500",
+    ring: "ring-amber-100",
+    badge: "bg-amber-50 text-amber-600 border border-amber-200",
+    line: "bg-gradient-to-b from-amber-200 to-slate-100",
+    card: "bg-amber-50 border-amber-200",
+    text: "text-amber-700",
     label: "Aman",
     Icon: CheckCircle2,
     glow: "",
@@ -57,15 +51,11 @@ const RISK = {
 function lineColor(current: TimelinePoint, next: TimelinePoint | undefined) {
   if (!next) return "bg-slate-100";
   const order = { tinggi: 3, sedang: 2, aman: 1 };
-  const higher =
-    order[current.risk] >= order[next.risk] ? current.risk : next.risk;
+  const higher = order[current.risk] >= order[next.risk] ? current.risk : next.risk;
   return RISK[higher].line;
 }
 
-export default function RiskTimeline({
-  timeline,
-  printMode = false,
-}: RiskTimelineProps) {
+export default function RiskTimeline({ timeline, printMode = false }: RiskTimelineProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const counts = {
@@ -102,8 +92,8 @@ export default function RiskTimeline({
             </span>
           )}
           {counts.aman > 0 && (
-            <span className="flex items-center gap-1 text-xs font-medium text-emerald-600 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
-              <span className="size-1.5 rounded-full bg-emerald-500 inline-block" />
+            <span className="flex items-center gap-1 text-xs font-medium text-amber-600 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full">
+              <span className="size-1.5 rounded-full bg-amber-500 inline-block" />
               {counts.aman} Aman
             </span>
           )}
@@ -134,9 +124,7 @@ export default function RiskTimeline({
                     aria-label={`${point.section} — ${cfg.label}`}
                   />
                   {!isLast && (
-                    <div
-                      className={`w-0.5 flex-1 min-h-6 mt-1 ${lineColor(point, timeline[i + 1])}`}
-                    />
+                    <div className={`w-0.5 flex-1 min-h-[24px] mt-1 ${lineColor(point, timeline[i + 1])}`} />
                   )}
                 </div>
 
@@ -153,14 +141,12 @@ export default function RiskTimeline({
                             ? "text-red-400"
                             : point.risk === "sedang"
                               ? "text-amber-400"
-                              : "text-emerald-400"
+                              : "text-amber-400"
                         }`}
                       />
                       <span
                         className={`text-sm truncate transition-colors ${
-                          isActive
-                            ? "font-semibold text-slate-800 dark:text-slate-100"
-                            : "text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200"
+                          isActive ? "font-semibold text-slate-800 dark:text-slate-100" : "text-slate-600 dark:text-slate-400 group-hover:text-slate-800 dark:group-hover:text-slate-200"
                         }`}
                       >
                         {point.section}
@@ -168,9 +154,7 @@ export default function RiskTimeline({
                     </div>
 
                     <div className="flex items-center gap-1.5 shrink-0">
-                      <span
-                        className={`text-xs font-medium px-2 py-0.5 rounded-full ${cfg.badge}`}
-                      >
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${cfg.badge}`}>
                         {cfg.label}
                       </span>
                       <ChevronDown

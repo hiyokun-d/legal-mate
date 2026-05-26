@@ -4,6 +4,7 @@ import type { GeminiContractResult, ChatMessage, GeminiLetterResult } from "@/li
 import RiskTimeline from "@/components/custom-ui/risk-timeline";
 import RiskCalculator from "@/components/custom-ui/risk-calculator";
 import BlacklistForm from "@/components/custom-ui/blacklist-form";
+import { SadaAvatar } from "@/components/custom-ui/sada-avatar";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertTriangle,
@@ -23,13 +24,6 @@ import {
 } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import RiskTimeline from "@/components/custom-ui/risk-timeline";
-import { SadaAvatar } from "@/components/custom-ui/sada-avatar";
-import type {
-  ChatMessage,
-  GeminiContractResult,
-  GeminiLetterResult,
-} from "@/lib/types";
 
 interface AnalyzeResultProps {
   data: GeminiContractResult;
@@ -40,20 +34,13 @@ interface AnalyzeResultProps {
 }
 
 const riskBadgeStyle = {
-  Rendah:
-    "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-800",
-  Sedang:
-    "text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800",
-  Tinggi:
-    "text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800",
+  Rendah: "text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800",
+  Sedang: "text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-800",
+  Tinggi: "text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800",
 };
 
 const scamBarColor = (s: number) =>
-  s >= 70
-    ? "bg-gradient-to-r from-red-500 to-red-600"
-    : s >= 40
-      ? "bg-gradient-to-r from-amber-400 to-orange-500"
-      : "bg-gradient-to-r from-emerald-500 to-teal-500";
+  s >= 70 ? "bg-gradient-to-r from-red-500 to-red-600" : s >= 40 ? "bg-gradient-to-r from-amber-400 to-orange-500" : "bg-gradient-to-r from-amber-500 to-amber-600";
 
 const scamLabel = (s: number) =>
   s >= 70 ? "Risiko Tinggi" : s >= 40 ? "Risiko Sedang" : "Relatif Aman";
@@ -63,10 +50,9 @@ const scamLabelColor = (s: number) =>
     ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
     : s >= 40
       ? "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
-      : "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400";
+      : "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400";
 
-const card =
-  "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm dark:shadow-black/20";
+const card = "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm dark:shadow-black/20";
 
 const stagger = {
   container: { animate: { transition: { staggerChildren: 0.07 } } },
@@ -106,18 +92,11 @@ export default function AnalyzeResult({
       const element = printRef.current;
       if (!element) throw new Error("no element");
       const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: "#f8fafc",
-        windowWidth: 680,
+        scale: 2, useCORS: true, logging: false,
+        backgroundColor: "#f8fafc", windowWidth: 680,
       });
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        unit: "mm",
-        format: "a4",
-        orientation: "portrait",
-      });
+      const pdf = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
       const pw = pdf.internal.pageSize.getWidth();
       const ph = pdf.internal.pageSize.getHeight();
       const ih = (canvas.height * pw) / canvas.width;
@@ -137,20 +116,14 @@ export default function AnalyzeResult({
   };
 
   const handleGenerateLetter = async () => {
-    if (letter) {
-      setShowLetter((v) => !v);
-      return;
-    }
+    if (letter) { setShowLetter((v) => !v); return; }
     setLetterLoading(true);
     try {
       const result = await onGenerateLetter();
       setLetter(result);
       setShowLetter(true);
-    } catch {
-      toast.error("Gagal membuat surat balasan");
-    } finally {
-      setLetterLoading(false);
-    }
+    } catch { toast.error("Gagal membuat surat balasan"); }
+    finally { setLetterLoading(false); }
   };
 
   const handleCopyLetter = () => {
@@ -162,18 +135,15 @@ export default function AnalyzeResult({
   const handleShareWhatsApp = () => {
     const text = encodeURIComponent(
       `🔍 *Laporan Sada AI*\n\n📄 ${fileName}\n⚠️ Risiko: ${data.riskLevel} (${score}/100)\n🚩 Red Flags: ${data.redFlags.length}\n\n` +
-        `📝 Ringkasan:\n${data.summary}\n\n` +
-        `🚨 Bahaya:\n${data.redFlags
-          .slice(0, 3)
-          .map((f) => `• ${f}`)
-          .join("\n")}\n\n_Oleh Sada · Legal Mate AI_`,
+      `📝 Ringkasan:\n${data.summary}\n\n` +
+      `🚨 Bahaya:\n${data.redFlags.slice(0, 3).map((f) => `• ${f}`).join("\n")}\n\n_Oleh Sada · Legal Mate AI_`
     );
     window.open(`https://wa.me/?text=${text}`, "_blank");
   };
 
   const handleCopySummary = () => {
     navigator.clipboard.writeText(
-      `Laporan Sada — ${fileName}\nRisiko: ${data.riskLevel} (${score}/100)\n\n${data.summary}\n\nRed Flags:\n${data.redFlags.map((f) => `• ${f}`).join("\n")}\n\nRekomendasi:\n${data.recommendations.map((r) => `• ${r}`).join("\n")}`,
+      `Laporan Sada — ${fileName}\nRisiko: ${data.riskLevel} (${score}/100)\n\n${data.summary}\n\nRed Flags:\n${data.redFlags.map((f) => `• ${f}`).join("\n")}\n\nRekomendasi:\n${data.recommendations.map((r) => `• ${r}`).join("\n")}`
     );
     toast.success("Ringkasan disalin!");
   };
@@ -191,28 +161,16 @@ export default function AnalyzeResult({
           {
             onClick: handleExportPDF,
             disabled: isDownloading,
-            icon: isDownloading ? (
-              <Loader2 className="size-3.5 animate-spin" />
-            ) : (
-              <Download className="size-3.5" />
-            ),
+            icon: isDownloading ? <Loader2 className="size-3.5 animate-spin" /> : <Download className="size-3.5" />,
             label: isDownloading ? "Membuat..." : "Unduh PDF",
             cls: "text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm",
           },
           {
             onClick: handleGenerateLetter,
             disabled: letterLoading,
-            icon: letterLoading ? (
-              <Loader2 className="size-3.5 animate-spin" />
-            ) : (
-              <Mail className="size-3.5" />
-            ),
-            label: letter
-              ? showLetter
-                ? "Sembunyikan"
-                : "Tampilkan Surat"
-              : "Buat Surat",
-            cls: "text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 dark:hover:bg-emerald-900/50",
+            icon: letterLoading ? <Loader2 className="size-3.5 animate-spin" /> : <Mail className="size-3.5" />,
+            label: letter ? (showLetter ? "Sembunyikan" : "Tampilkan Surat") : "Buat Surat",
+            cls: "text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/50",
           },
           {
             onClick: handleShareWhatsApp,
@@ -261,15 +219,11 @@ export default function AnalyzeResult({
         className="space-y-4 bg-slate-50 dark:bg-slate-950 p-3 rounded-3xl"
       >
         {/* Sada header (shows in PDF) */}
-        <motion.div
-          variants={stagger.item}
-          transition={itemTransition}
-          className={card}
-        >
+        <motion.div variants={stagger.item} transition={itemTransition} className={card}>
           <div className="flex items-center gap-3">
             <SadaAvatar size="md" />
             <div>
-              <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+              <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-widest">
                 Sada · Legal Mate AI
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -280,11 +234,7 @@ export default function AnalyzeResult({
         </motion.div>
 
         {/* Scam meter */}
-        <motion.div
-          variants={stagger.item}
-          transition={itemTransition}
-          className={`${card} space-y-3`}
-        >
+        <motion.div variants={stagger.item} transition={itemTransition} className={`${card} space-y-3`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <AlertTriangle className="size-4 text-slate-400 dark:text-slate-500" />
@@ -292,18 +242,14 @@ export default function AnalyzeResult({
                 Indikator Scam
               </p>
             </div>
-            <span
-              className={`text-xs font-bold px-2 py-0.5 rounded-full ${scamLabelColor(score)}`}
-            >
+            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${scamLabelColor(score)}`}>
               {scamLabel(score)}
             </span>
           </div>
           <div className="space-y-1.5">
             <div className="flex justify-between text-xs text-slate-400 dark:text-slate-500">
               <span>Aman</span>
-              <span className="font-bold text-slate-700 dark:text-slate-200">
-                {score} / 100
-              </span>
+              <span className="font-bold text-slate-700 dark:text-slate-200">{score} / 100</span>
               <span>Bahaya</span>
             </div>
             <div className="h-3 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -318,29 +264,11 @@ export default function AnalyzeResult({
         </motion.div>
 
         {/* Stats */}
-        <motion.div
-          variants={stagger.item}
-          transition={itemTransition}
-          className="grid grid-cols-3 gap-3"
-        >
+        <motion.div variants={stagger.item} transition={itemTransition} className="grid grid-cols-3 gap-3">
           {[
-            {
-              val: data.metrics.klausul,
-              label: "Klausul",
-              style:
-                "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800",
-            },
-            {
-              val: data.riskLevel,
-              label: "Risiko",
-              style: `border ${riskBadgeStyle[data.riskLevel]}`,
-            },
-            {
-              val: data.redFlags.length,
-              label: "Red Flags",
-              style:
-                "bg-white dark:bg-slate-900 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400",
-            },
+            { val: data.metrics.klausul, label: "Klausul", style: "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800" },
+            { val: data.riskLevel, label: "Risiko", style: `border ${riskBadgeStyle[data.riskLevel]}` },
+            { val: data.redFlags.length, label: "Red Flags", style: "bg-white dark:bg-slate-900 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400" },
           ].map(({ val, label, style }) => (
             <motion.div
               key={label}
@@ -354,61 +282,33 @@ export default function AnalyzeResult({
         </motion.div>
 
         {/* Verdict */}
-        <motion.div
-          variants={stagger.item}
-          transition={itemTransition}
-          className={`${card} space-y-3`}
-        >
-          <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">
-            Verdict
-          </p>
+        <motion.div variants={stagger.item} transition={itemTransition} className={`${card} space-y-3`}>
+          <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">Verdict</p>
           {[
-            {
-              ok: data.verdict.sah,
-              label: data.verdict.sah ? "Dokumen Sah" : "Dokumen Tidak Sah",
-              msg: data.verdict.pesanSah,
-            },
-            {
-              ok: !data.verdict.bermasalah,
-              label: data.verdict.bermasalah
-                ? "Ada Klausul Bermasalah"
-                : "Tidak Ada Masalah",
-              msg: data.verdict.pesanBermasalah,
-            },
+            { ok: data.verdict.sah, label: data.verdict.sah ? "Dokumen Sah" : "Dokumen Tidak Sah", msg: data.verdict.pesanSah },
+            { ok: !data.verdict.bermasalah, label: data.verdict.bermasalah ? "Ada Klausul Bermasalah" : "Tidak Ada Masalah", msg: data.verdict.pesanBermasalah },
           ].map(({ ok, label, msg }, i) => (
             <div key={i} className="flex items-start gap-3">
               {ok ? (
-                <CheckCircle2 className="size-5 text-emerald-500 shrink-0 mt-0.5" />
+                <CheckCircle2 className="size-5 text-amber-500 shrink-0 mt-0.5" />
               ) : (
                 <XCircle className="size-5 text-red-500 shrink-0 mt-0.5" />
               )}
               <div>
-                <p className="text-sm font-medium text-slate-700 dark:text-slate-200">
-                  {label}
-                </p>
-                <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 leading-relaxed">
-                  {msg}
-                </p>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{label}</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 leading-relaxed">{msg}</p>
               </div>
             </div>
           ))}
         </motion.div>
 
         {/* Summary */}
-        <motion.div
-          variants={stagger.item}
-          transition={itemTransition}
-          className={`${card} space-y-2`}
-        >
+        <motion.div variants={stagger.item} transition={itemTransition} className={`${card} space-y-2`}>
           <div className="flex items-center gap-2">
             <Info className="size-4 text-slate-400 dark:text-slate-500" />
-            <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">
-              Ringkasan
-            </p>
+            <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">Ringkasan</p>
           </div>
-          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-            {data.summary}
-          </p>
+          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{data.summary}</p>
         </motion.div>
 
         {/* Timeline */}
@@ -419,16 +319,10 @@ export default function AnalyzeResult({
         )}
 
         {/* Red flags */}
-        <motion.div
-          variants={stagger.item}
-          transition={itemTransition}
-          className="bg-white dark:bg-slate-900 border-2 border-red-200 dark:border-red-900/60 rounded-2xl p-4 shadow-sm dark:shadow-black/20 space-y-3"
-        >
+        <motion.div variants={stagger.item} transition={itemTransition} className="bg-white dark:bg-slate-900 border-2 border-red-200 dark:border-red-900/60 rounded-2xl p-4 shadow-sm dark:shadow-black/20 space-y-3">
           <div className="flex items-center gap-2">
             <AlertTriangle className="size-4 text-red-500" />
-            <p className="text-xs font-bold text-red-500 uppercase tracking-wide">
-              🚨 Red Flags
-            </p>
+            <p className="text-xs font-bold text-red-500 uppercase tracking-wide">🚨 Red Flags</p>
           </div>
           <ul className="space-y-2">
             {data.redFlags.map((flag, i) => (
@@ -439,9 +333,7 @@ export default function AnalyzeResult({
                 transition={{ delay: 0.05 * i }}
                 className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200 bg-red-50 dark:bg-red-950/30 rounded-xl px-3 py-2 border border-red-100 dark:border-red-900/50"
               >
-                <span className="text-red-500 font-bold shrink-0 mt-0.5">
-                  {i + 1}.
-                </span>
+                <span className="text-red-500 font-bold shrink-0 mt-0.5">{i + 1}.</span>
                 {flag}
               </motion.li>
             ))}
@@ -449,16 +341,10 @@ export default function AnalyzeResult({
         </motion.div>
 
         {/* Recommendations */}
-        <motion.div
-          variants={stagger.item}
-          transition={itemTransition}
-          className="bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-900/60 rounded-2xl p-4 shadow-sm dark:shadow-black/20 space-y-3"
-        >
+        <motion.div variants={stagger.item} transition={itemTransition} className="bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-900/60 rounded-2xl p-4 shadow-sm dark:shadow-black/20 space-y-3">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="size-4 text-emerald-500" />
-            <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
-              Rekomendasi
-            </p>
+            <CheckCircle2 className="size-4 text-amber-500" />
+            <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wide">Rekomendasi</p>
           </div>
           <ul className="space-y-2">
             {data.recommendations.map((rec, i) => (
@@ -467,9 +353,9 @@ export default function AnalyzeResult({
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.05 * i }}
-                className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl px-3 py-2 border border-emerald-100 dark:border-emerald-900/50"
+                className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-200 bg-amber-50 dark:bg-amber-950/30 rounded-xl px-3 py-2 border border-amber-100 dark:border-amber-900/50"
               >
-                <span className="text-emerald-500 shrink-0 mt-0.5">✓</span>
+                <span className="text-amber-500 shrink-0 mt-0.5">✓</span>
                 {rec}
               </motion.li>
             ))}
@@ -478,11 +364,7 @@ export default function AnalyzeResult({
 
         {/* Safety checklist */}
         {data.safetyChecklist?.length > 0 && (
-          <motion.div
-            variants={stagger.item}
-            transition={itemTransition}
-            className="bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900/50 rounded-2xl p-4 shadow-sm dark:shadow-black/20 space-y-3"
-          >
+          <motion.div variants={stagger.item} transition={itemTransition} className="bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900/50 rounded-2xl p-4 shadow-sm dark:shadow-black/20 space-y-3">
             <div className="flex items-center gap-2">
               <ClipboardCheck className="size-4 text-blue-500" />
               <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide">
@@ -491,22 +373,16 @@ export default function AnalyzeResult({
             </div>
             <ul className="space-y-2">
               {data.safetyChecklist.map((item, i) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300"
-                >
+                <li key={i} className="flex items-start gap-2.5 text-sm text-slate-700 dark:text-slate-300">
                   <div className="mt-0.5 w-4 h-4 rounded border-2 border-blue-300 dark:border-blue-700 shrink-0 flex items-center justify-center">
-                    <span className="text-[9px] text-blue-400 dark:text-blue-500 font-bold">
-                      {i + 1}
-                    </span>
+                    <span className="text-[9px] text-blue-400 dark:text-blue-500 font-bold">{i + 1}</span>
                   </div>
                   {item}
                 </li>
               ))}
             </ul>
             <p className="text-[10px] text-slate-400 dark:text-slate-600 border-t border-slate-100 dark:border-slate-800 pt-2">
-              Dianalisis oleh Sada · Legal Mate AI ·{" "}
-              {new Date().toLocaleDateString("id-ID", { dateStyle: "long" })}
+              Dianalisis oleh Sada · Legal Mate AI · {new Date().toLocaleDateString("id-ID", { dateStyle: "long" })}
             </p>
           </motion.div>
         )}
@@ -537,7 +413,7 @@ export default function AnalyzeResult({
                 <a
                   href="/blacklist"
                   target="_blank"
-                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-emerald-500 transition-colors"
+                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-amber-500 transition-colors"
                 >
                   <ExternalLink className="size-3" />
                   Lihat semua laporan komunitas
@@ -562,23 +438,14 @@ export default function AnalyzeResult({
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <FileText className="size-4 text-blue-400" />
-                  <p className="text-xs font-semibold text-blue-500 uppercase tracking-wide">
-                    Surat Balasan
-                  </p>
+                  <p className="text-xs font-semibold text-blue-500 uppercase tracking-wide">Surat Balasan</p>
                 </div>
-                <button
-                  onClick={handleCopyLetter}
-                  className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
-                >
+                <button onClick={handleCopyLetter} className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
                   <Copy className="size-3" /> Salin
                 </button>
               </div>
-              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                Perihal: {letter.subject}
-              </p>
-              <pre className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-wrap font-sans">
-                {letter.letter}
-              </pre>
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Perihal: {letter.subject}</p>
+              <pre className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-wrap font-sans">{letter.letter}</pre>
             </div>
           </motion.div>
         )}
@@ -589,9 +456,7 @@ export default function AnalyzeResult({
         <div className="space-y-3">
           <div className="flex items-center gap-2 px-1">
             <MessageSquare className="size-3.5 text-slate-400 dark:text-slate-500" />
-            <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">
-              Percakapan dengan Sada
-            </p>
+            <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">Percakapan dengan Sada</p>
           </div>
           <AnimatePresence initial={false}>
             {chatHistory.map((msg, i) => (
@@ -606,7 +471,7 @@ export default function AnalyzeResult({
                 <div
                   className={`rounded-2xl p-3.5 text-sm leading-relaxed max-w-[85%] ${
                     msg.role === "user"
-                      ? "bg-emerald-500 text-white"
+                      ? "bg-amber-500 text-white"
                       : "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 shadow-sm dark:shadow-black/20"
                   }`}
                 >
@@ -626,13 +491,9 @@ export default function AnalyzeResult({
                 {[0, 1, 2].map((i) => (
                   <motion.span
                     key={i}
-                    className="w-1.5 h-1.5 rounded-full bg-emerald-500 block"
+                    className="w-1.5 h-1.5 rounded-full bg-amber-500 block"
                     animate={{ y: [0, -4, 0], opacity: [0.4, 1, 0.4] }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 0.9,
-                      delay: i * 0.15,
-                    }}
+                    transition={{ repeat: Infinity, duration: 0.9, delay: i * 0.15 }}
                   />
                 ))}
               </div>

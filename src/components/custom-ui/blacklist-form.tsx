@@ -3,6 +3,7 @@
 import { AlertTriangle, Building2, Loader2, MapPin, Phone, Send, ShieldAlert } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { securePost } from "@/lib/secureRequest";
 
 interface BlacklistFormProps {
   prefillNama?: string;
@@ -40,7 +41,7 @@ export default function BlacklistForm({
   const [loading, setLoading] = useState(false);
 
   const inputCls =
-    "w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-400 dark:focus:border-emerald-500 transition-all";
+    "w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-400 dark:focus:border-amber-500 transition-all";
 
   const handleSubmit = async () => {
     if (!nama.trim() || !modus.trim()) {
@@ -49,11 +50,7 @@ export default function BlacklistForm({
     }
     setLoading(true);
     try {
-      const res = await fetch("/api/blacklist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nama, jenis, modus, lokasi, kontak, scam_score: prefillScamScore }),
-      });
+      const res = await securePost("/api/blacklist", { nama, jenis, modus, lokasi, kontak, scam_score: prefillScamScore });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       if (data.action === "upvoted") {
@@ -115,8 +112,8 @@ export default function BlacklistForm({
               onClick={() => setJenis(opt)}
               className={`text-xs px-2.5 py-1.5 rounded-lg border font-medium transition-all ${
                 jenis === opt
-                  ? "bg-emerald-500 text-white border-emerald-500"
-                  : "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700"
+                  ? "bg-amber-500 text-white border-amber-500"
+                  : "bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-amber-300 dark:hover:border-amber-700"
               }`}
             >
               {opt}

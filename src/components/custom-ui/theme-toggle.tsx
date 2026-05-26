@@ -18,7 +18,7 @@ export function ThemeToggle() {
       whileTap={{ scale: 0.85, rotate: isDark ? -30 : 30 }}
       whileHover={{ scale: 1.08 }}
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors overflow-hidden"
+      className="relative p-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-amber-500/10 dark:hover:bg-amber-500/10 text-slate-600 dark:text-amber-400 transition-colors overflow-hidden"
       aria-label="Toggle theme"
     >
       <AnimatePresence mode="wait" initial={false}>

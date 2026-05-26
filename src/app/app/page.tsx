@@ -1,22 +1,19 @@
 "use client";
+import { securePost } from "@/lib/secureRequest";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { ShieldCheck, Zap } from "lucide-react";
-import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
-import { toast } from "sonner";
 import AnalyzeConfirm from "@/components/custom-ui/analyze-confirm";
 import AnalyzeLoading from "@/components/custom-ui/analyze-loading";
 import AnalyzeResult from "@/components/custom-ui/analyze-result";
 import Dropzone from "@/components/custom-ui/dropzone";
 import PromptBox from "@/components/custom-ui/promptbox";
-import { ThemeToggle } from "@/components/custom-ui/theme-toggle";
 import { extractFileContent, type FileContent } from "@/lib/extractFileContent";
-import type {
-  ChatMessage,
-  GeminiContractResult,
-  GeminiLetterResult,
-} from "@/lib/types";
+import type { ChatMessage, GeminiContractResult, GeminiLetterResult } from "@/lib/types";
+import { ThemeToggle } from "@/components/custom-ui/theme-toggle";
+import { AnimatePresence, motion } from "framer-motion";
+import { ShieldCheck, Zap } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useRef, useState } from "react";
+import { toast } from "sonner";
 
 type AppState = "idle" | "ready" | "analyzing" | "done";
 
@@ -28,8 +25,7 @@ export default function Home() {
   const [files, setFiles] = useState<File[]>([]);
   const [fileContents, setFileContents] = useState<FileContent[]>([]);
 
-  const [analysisResult, setAnalysisResult] =
-    useState<GeminiContractResult | null>(null);
+  const [analysisResult, setAnalysisResult] = useState<GeminiContractResult | null>(null);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [isChatLoading, setChatLoading] = useState(false);
 
@@ -37,42 +33,28 @@ export default function Home() {
 
   const addTokens = (n: number) => setTotalTokens((prev) => prev + n);
 
-  const callAnalyzeAPI = (
-    contents: FileContent[],
-  ): Promise<GeminiContractResult> =>
-    fetch("/api/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mode: "contract", fileContent: contents }),
-    })
-      .then(async (r) => {
-        const data = await r.json();
-        if (!r.ok) throw new Error(data.error ?? "Gagal menganalisis dokumen.");
-        return data;
-      })
-      .then((data) => {
-        const { _tokenUsage, ...result } = data;
-        addTokens(_tokenUsage ?? 0);
-        return result as GeminiContractResult;
-      });
+  const callAnalyzeAPI = (contents: FileContent[]): Promise<GeminiContractResult> =>
+    securePost("/api/analyze", { mode: "contract", fileContent: contents }).then(async (r) => {
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error ?? "Gagal menganalisis dokumen.");
+      return data;
+    }).then((data) => {
+      const { _tokenUsage, ...result } = data;
+      addTokens(_tokenUsage ?? 0);
+      return result as GeminiContractResult;
+    });
 
   const handleFilesAdded = async (newFiles: File[]) => {
     const extracted = await Promise.all(
       newFiles.map(async (f) => {
-        try {
-          return await extractFileContent(f);
-        } catch {
-          toast.error(`Gagal membaca ${f.name}`);
-          return null;
-        }
-      }),
+        try { return await extractFileContent(f); }
+        catch { toast.error(`Gagal membaca ${f.name}`); return null; }
+      })
     );
 
     const validPairs = newFiles
       .map((f, i) => ({ file: f, content: extracted[i] }))
-      .filter(
-        (p): p is { file: File; content: FileContent } => p.content !== null,
-      );
+      .filter((p): p is { file: File; content: FileContent } => p.content !== null);
 
     if (validPairs.length === 0) return;
 
@@ -105,9 +87,7 @@ export default function Home() {
       setAnalysisResult(result);
       setAppState("done");
     } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Gagal menganalisis. Coba lagi.",
-      );
+      toast.error(err instanceof Error ? err.message : "Gagal menganalisis. Coba lagi.");
       setAppState("ready");
     }
   }, []);
@@ -117,38 +97,20 @@ export default function Home() {
     setChatHistory((prev) => [...prev, userMsg]);
     setChatLoading(true);
     try {
-      const res = await fetch("/api/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          mode: "chat",
-          message: text,
-          history: chatHistory,
-        }),
-      });
-      const data: { reply: string; _tokenUsage?: number; error?: string } =
-        await res.json();
+      const res = await securePost("/api/analyze", { mode: "chat", message: text, history: chatHistory });
+      const data: { reply: string; _tokenUsage?: number; error?: string } = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Gagal mengirim pesan.");
       addTokens(data._tokenUsage ?? 0);
-      setChatHistory((prev) => [
-        ...prev,
-        { role: "assistant", content: data.reply },
-      ]);
+      setChatHistory((prev) => [...prev, { role: "assistant", content: data.reply }]);
     } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Gagal mengirim pesan. Coba lagi.",
-      );
+      toast.error(err instanceof Error ? err.message : "Gagal mengirim pesan. Coba lagi.");
     } finally {
       setChatLoading(false);
     }
   };
 
   const handleGenerateLetter = async (): Promise<GeminiLetterResult> => {
-    const res = await fetch("/api/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mode: "letter", analysisResult }),
-    });
+    const res = await securePost("/api/analyze", { mode: "letter", analysisResult });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error ?? "Gagal membuat surat.");
     const { _tokenUsage, ...result } = data;
@@ -168,18 +130,16 @@ export default function Home() {
   return (
     <>
       {/* ── HEADER ── */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-sm border-b border-slate-100 dark:border-slate-800">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/85 dark:bg-[#0A0805]/90 backdrop-blur-xl border-b border-amber-500/10 dark:border-amber-500/15">
         <div className="flex items-center justify-between px-4 h-14">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-6 h-6 rounded-md bg-emerald-500 flex items-center justify-center transition-transform group-hover:scale-110">
+            <div className="w-6 h-6 rounded-md bg-amber-500 flex items-center justify-center transition-transform group-hover:scale-110">
               <ShieldCheck className="size-3.5 text-white" />
             </div>
             <div>
-              <span className="text-sm font-bold text-slate-800 dark:text-slate-100">
-                Legal Mate
-              </span>
-              <span className="hidden sm:inline ml-2 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
+              <span className="text-sm font-bold text-slate-800 dark:text-slate-100 tracking-tight">Legal Mate</span>
+              <span className="hidden sm:inline ml-2 text-[10px] font-medium text-amber-600 dark:text-amber-400">
                 by Sada AI
               </span>
             </div>
@@ -195,12 +155,9 @@ export default function Home() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
                 >
-                  <Zap className="size-3 text-emerald-500" />
+                  <Zap className="size-3 text-amber-500" />
                   <span className="text-xs tabular-nums font-medium text-slate-600 dark:text-slate-300">
-                    {totalTokens >= 1000
-                      ? `${(totalTokens / 1000).toFixed(1)}K`
-                      : totalTokens}{" "}
-                    tokens
+                    {totalTokens >= 1000 ? `${(totalTokens / 1000).toFixed(1)}K` : totalTokens} tokens
                   </span>
                 </motion.div>
               )}
@@ -293,10 +250,7 @@ export default function Home() {
               transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
               className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-2xl px-4 z-50"
             >
-              <PromptBox
-                isDragging={isDragging}
-                onSubmit={handlePromptSubmit}
-              />
+              <PromptBox isDragging={isDragging} onSubmit={handlePromptSubmit} />
             </motion.div>
           )}
         </AnimatePresence>
