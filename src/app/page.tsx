@@ -30,6 +30,7 @@ export default function Home() {
               { href: "#cara-kerja", label: "Cara Kerja" },
               { href: "#fitur", label: "Fitur" },
               { href: "/blacklist", label: "Blacklist" },
+              { href: "/penjualan", label: "💰 Penjualan" },
             ].map(({ href, label }) => (
               <Link
                 key={label}
@@ -133,7 +134,7 @@ export default function Home() {
 
         {/* Floating card */}
         <div className="relative z-10 mt-16 animate-float">
-          <div className="flex items-start gap-3 bg-white dark:bg-[#130F07]/90 border border-red-200 dark:border-red-500/25 rounded-2xl px-5 py-4 shadow-2xl shadow-black/10 dark:shadow-black/50 max-w-xs">
+          <div className="flex items-start gap-3 bg-white dark:bg-[#130F07]/90 shadow-xl shadow-amber-500/5 dark:shadow-black/50 border border-red-200 dark:border-red-500/25 rounded-2xl px-5 py-4 shadow-2xl shadow-black/10 dark:shadow-black/50 max-w-xs">
             <div className="p-2 bg-red-500/10 rounded-lg shrink-0 mt-0.5">
               <AlertTriangle className="size-4 text-red-500 dark:text-red-400" />
             </div>
@@ -149,7 +150,7 @@ export default function Home() {
       </section>
 
       {/* ── BREAKING NEWS ── */}
-      <div id="berita" className="bg-slate-50 dark:bg-[#0D0A06] border-t border-slate-200 dark:border-amber-500/10">
+      <div id="berita" className="bg-slate-50 dark:bg-[#0D0A06] border-t border-slate-200 dark:border-amber-500/10 py-8">
         <NewsFeed />
       </div>
 
@@ -348,6 +349,7 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <Link href="/app" className="text-xs text-amber-600 dark:text-amber-500 hover:underline font-medium">Analisis Kontrak</Link>
             <Link href="/blacklist" className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">Blacklist</Link>
+            <Link href="/penjualan" className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">💰 Penjualan</Link>
           </div>
         </div>
       </footer>

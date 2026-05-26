@@ -38,3 +38,16 @@ export async function securePatch(url: string, body: unknown): Promise<Response>
     body: JSON.stringify(body),
   });
 }
+
+export async function secureDelete(url: string, body: unknown): Promise<Response> {
+  const token = await getToken();
+  return fetch(url, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "x-request-token": token,
+    },
+    credentials: "same-origin",
+    body: JSON.stringify(body),
+  });
+}

@@ -17,12 +17,12 @@ function timeAgo(dateStr: string): string {
 function riskTag(title: string): { label: string; color: string } {
   const t = title.toLowerCase();
   if (t.includes("penipuan") || t.includes("scam") || t.includes("tipu") || t.includes("modus"))
-    return { label: "Penipuan", color: "bg-red-500/20 text-red-300 border-red-500/30" };
+    return { label: "Penipuan", color: "bg-red-50 dark:bg-red-500/20 text-red-700 dark:text-red-300 border-red-200 dark:border-red-500/30" };
   if (t.includes("investasi") || t.includes("bodong") || t.includes("palsu") || t.includes("ilegal"))
-    return { label: "Investasi Bodong", color: "bg-orange-500/20 text-orange-300 border-orange-500/30" };
+    return { label: "Investasi Bodong", color: "bg-orange-50 dark:bg-orange-500/20 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-500/30" };
   if (t.includes("kontrak") || t.includes("perjanjian") || t.includes("klausul"))
-    return { label: "Kontrak", color: "bg-amber-500/20 text-amber-300 border-amber-500/30" };
-  return { label: "Waspada", color: "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" };
+    return { label: "Kontrak", color: "bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-500/30" };
+  return { label: "Waspada", color: "bg-yellow-50 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-500/30" };
 }
 
 export default function NewsFeed() {
@@ -63,23 +63,23 @@ export default function NewsFeed() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500" />
             </span>
-            <h2 className="text-2xl font-bold text-white">Penipuan &amp; Scam Terkini</h2>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Penipuan &amp; Scam Terkini</h2>
           </div>
-          <p className="text-slate-400 text-sm pl-6">
+          <p className="text-slate-600 dark:text-slate-400 text-sm pl-6">
             Berita nyata dari media Indonesia — diperbarui otomatis setiap menit
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           {lastUpdate && (
-            <span className="text-xs text-slate-500 tabular-nums">
+            <span className="text-xs text-slate-500 dark:text-slate-500 tabular-nums">
               {elapsed < 60 ? `${elapsed}d` : `${Math.floor(elapsed / 60)}m`} lalu
             </span>
           )}
           <button
             onClick={() => load(true)}
             disabled={loading}
-            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white border border-slate-700/50 hover:border-amber-500/30 rounded-lg px-3 py-1.5 transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-amber-600 dark:hover:text-white border border-slate-300 dark:border-slate-700/50 hover:border-amber-400 dark:hover:border-amber-500/30 rounded-lg px-3 py-1.5 transition-all disabled:opacity-50"
           >
             <RefreshCw className={`size-3 ${loading ? "animate-spin" : ""}`} />
             Refresh
@@ -93,7 +93,7 @@ export default function NewsFeed() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="h-36 rounded-2xl bg-slate-800/50 border border-slate-700/50 animate-pulse"
+              className="h-36 rounded-2xl bg-slate-200 dark:bg-slate-800/50 border border-slate-300 dark:border-slate-700/50 animate-pulse"
             />
           ))}
         </div>
@@ -111,7 +111,7 @@ export default function NewsFeed() {
                 href={item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col justify-between gap-3 p-5 rounded-2xl bg-white/5 dark:bg-amber-900/5 border border-slate-700/40 hover:border-amber-500/30 hover:bg-white/10 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20"
+                className="group flex flex-col justify-between gap-3 p-5 rounded-2xl bg-white dark:bg-amber-900/5 border border-slate-200 dark:border-slate-700/40 hover:border-amber-400 dark:hover:border-amber-500/30 hover:bg-amber-50/50 dark:hover:bg-white/10 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/10"
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between gap-2">
@@ -124,7 +124,7 @@ export default function NewsFeed() {
                       {timeAgo(item.pubDate)}
                     </span>
                   </div>
-                  <p className="text-sm font-medium text-slate-200 leading-relaxed line-clamp-3 group-hover:text-white transition-colors">
+                  <p className="text-sm font-medium text-slate-700 dark:text-slate-200 leading-relaxed line-clamp-3 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
                     {item.title}
                   </p>
                 </div>
@@ -132,7 +132,7 @@ export default function NewsFeed() {
                   <span className="text-[10px] text-slate-500 font-medium truncate">
                     {item.source}
                   </span>
-                  <ExternalLink className="size-3 text-slate-600 group-hover:text-slate-400 transition-colors shrink-0" />
+                  <ExternalLink className="size-3 text-slate-400 dark:text-slate-600 group-hover:text-amber-500 dark:group-hover:text-slate-400 transition-colors shrink-0" />
                 </div>
               </a>
             );
@@ -140,7 +140,7 @@ export default function NewsFeed() {
         </div>
       )}
 
-      <p className="text-center text-xs text-slate-600">
+      <p className="text-center text-xs text-slate-500 dark:text-slate-600">
         Sumber: Google News Indonesia · Data diambil langsung dari media terpercaya
       </p>
     </section>
