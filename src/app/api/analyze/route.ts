@@ -10,8 +10,8 @@ import type { FileContent } from "@/lib/extractFileContent";
 import type { ChatMessage, GeminiContractResult } from "@/lib/types";
 import { validateToken } from "@/app/api/token/route";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_JUARA! });
-const MODEL = "gemini-2.0-flash";
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const MODEL = "gemini-3.1-flash-lite";
 
 const SYSTEM_PROMPT = `Anda adalah 'Sada', seorang penasihat hukum AI dan asisten pribadi gratis untuk pelaku UMKM (Usaha Mikro, Kecil, dan Menengah) di Indonesia.
 
@@ -92,7 +92,11 @@ type RequestBody = ContractBody | ChatBody | LetterBody;
 export async function POST(req: NextRequest) {
   // Security: validate one-time token + origin
   const { valid, error } = validateToken(req);
-  if (!valid) return NextResponse.json({ error: error ?? "Unauthorized." }, { status: 401 });
+  if (!valid)
+    return NextResponse.json(
+      { error: error ?? "Unauthorized." },
+      { status: 401 },
+    );
 
   try {
     const body: RequestBody = await req.json();
@@ -155,13 +159,21 @@ Format JSON:
     console.error("Analyze API error:", err);
     const msg = err instanceof Error ? err.message : String(err);
 
-    if (msg.includes("503") || msg.includes("UNAVAILABLE") || msg.includes("high demand")) {
+    if (
+      msg.includes("503") ||
+      msg.includes("UNAVAILABLE") ||
+      msg.includes("high demand")
+    ) {
       return NextResponse.json(
         { error: "Model AI sedang overload. Tunggu 30 detik lalu coba lagi." },
         { status: 503 },
       );
     }
-    if (msg.includes("429") || msg.includes("RESOURCE_EXHAUSTED") || msg.includes("quota")) {
+    if (
+      msg.includes("429") ||
+      msg.includes("RESOURCE_EXHAUSTED") ||
+      msg.includes("quota")
+    ) {
       return NextResponse.json(
         { error: "Kuota API habis untuk hari ini. Coba lagi besok." },
         { status: 429 },
@@ -173,7 +185,11 @@ Format JSON:
         { status: 400 },
       );
     }
-    if (msg.includes("401") || msg.includes("API_KEY") || msg.includes("PERMISSION_DENIED")) {
+    if (
+      msg.includes("401") ||
+      msg.includes("API_KEY") ||
+      msg.includes("PERMISSION_DENIED")
+    ) {
       return NextResponse.json(
         { error: "API key tidak valid. Hubungi admin." },
         { status: 401 },
