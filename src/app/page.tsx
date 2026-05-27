@@ -149,7 +149,7 @@ export default function Home() {
       </section>
 
       {/* ── BREAKING NEWS ── */}
-      <div id="berita" className="bg-slate-50 dark:bg-[#0D0A06] border-t border-slate-200 dark:border-amber-500/10">
+      <div id="berita" className="bg-slate-50 dark:bg-[#0D0A06] border-t border-slate-200 dark:border-amber-500/10 py-8">
         <NewsFeed />
       </div>
 
@@ -348,6 +348,7 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <Link href="/app" className="text-xs text-amber-600 dark:text-amber-500 hover:underline font-medium">Analisis Kontrak</Link>
             <Link href="/blacklist" className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">Blacklist</Link>
+            <Link href="/penjualan" className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">💰 Penjualan</Link>
           </div>
         </div>
       </footer>
