@@ -111,10 +111,6 @@ export async function POST(req: NextRequest) {
 
   try {
     const body: RequestBody = await req.json();
-    if (!process.env.API_JUARA) {
-      console.error("Hey we got an error");
-    }
-
     let contents;
 
     // Layer 2 — reminder injected before every user turn
@@ -125,17 +121,20 @@ export async function POST(req: NextRequest) {
         fc.kind === "binary"
           ? {
               type: "image_url" as const,
-              image_url: { url: `data:${fc.mimeType};base64,${fc.base64}` }
+              image_url: { url: `data:${fc.mimeType};base64,${fc.base64}` },
             }
           : {
               type: "text" as const,
-              text: `KONTEN DOKUMEN (${fc.name}):\n${fc.text}`
+              text: `KONTEN DOKUMEN (${fc.name}):\n${fc.text}`,
             },
       );
 
       contents = [
         { role: "system", content: GUARDRAIL_SYSTEM },
-        { role: "user", content: [{ type: "text", text: SYSTEM_PROMPT }, ...fileParts] },
+        {
+          role: "user",
+          content: [{ type: "text", text: SYSTEM_PROMPT }, ...fileParts],
+        },
       ];
     } else if (body.mode === "chat") {
       contents = [
@@ -143,7 +142,10 @@ export async function POST(req: NextRequest) {
         { role: "user", content: SYSTEM_PROMPT },
         ...body.history.map((msg) =>
           msg.role === "user"
-            ? { role: "user" as const, content: `${TURN_GUARD}\n\n${msg.content}` }
+            ? {
+                role: "user" as const,
+                content: `${TURN_GUARD}\n\n${msg.content}`,
+              }
             : { role: "assistant" as const, content: msg.content },
         ),
         { role: "user", content: `${TURN_GUARD}\n\n${body.message}` },
@@ -171,7 +173,7 @@ Format JSON:
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${KOBOI_KEY}`,
+        Authorization: `Bearer ${KOBOI_KEY}`,
       },
       body: JSON.stringify({
         model: MODEL,
@@ -195,13 +197,21 @@ Format JSON:
     console.error("Analyze API error:", err);
     const msg = err instanceof Error ? err.message : String(err);
 
-    if (msg.includes("503") || msg.includes("UNAVAILABLE") || msg.includes("high demand")) {
+    if (
+      msg.includes("503") ||
+      msg.includes("UNAVAILABLE") ||
+      msg.includes("high demand")
+    ) {
       return NextResponse.json(
         { error: "Model AI sedang overload. Tunggu 30 detik lalu coba lagi." },
         { status: 503 },
       );
     }
-    if (msg.includes("429") || msg.includes("RESOURCE_EXHAUSTED") || msg.includes("quota")) {
+    if (
+      msg.includes("429") ||
+      msg.includes("RESOURCE_EXHAUSTED") ||
+      msg.includes("quota")
+    ) {
       return NextResponse.json(
         { error: "Kuota API habis untuk hari ini. Coba lagi besok." },
         { status: 429 },
@@ -213,7 +223,11 @@ Format JSON:
         { status: 400 },
       );
     }
-    if (msg.includes("401") || msg.includes("API_KEY") || msg.includes("PERMISSION_DENIED")) {
+    if (
+      msg.includes("401") ||
+      msg.includes("API_KEY") ||
+      msg.includes("PERMISSION_DENIED")
+    ) {
       return NextResponse.json(
         { error: "API key tidak valid. Hubungi admin." },
         { status: 401 },
