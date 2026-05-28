@@ -1,14 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateToken } from "@/app/api/token/route";
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-const sbHeaders = {
-  "Content-Type": "application/json",
-  "apikey": SUPABASE_KEY,
-  "Authorization": `Bearer ${SUPABASE_KEY}`,
-};
+import { prisma } from "@/lib/prisma";
 
 function genId(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -17,20 +9,23 @@ function genId(): string {
   return id;
 }
 
+function serializeBook(b: { id: string; nama_usaha: string; created_at: Date }) {
+  return { id: b.id, nama_usaha: b.nama_usaha, created_at: b.created_at.toISOString() };
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ error: "ID wajib." }, { status: 400 });
 
-  const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/ledger_books?id=eq.${encodeURIComponent(id)}&select=*`,
-    { headers: sbHeaders }
-  );
-  const rows = await res.json();
-  if (!Array.isArray(rows) || rows.length === 0) {
-    return NextResponse.json({ error: "Buku tidak ditemukan." }, { status: 404 });
+  try {
+    const book = await prisma.ledgerBook.findUnique({ where: { id } });
+    if (!book) return NextResponse.json({ error: "Buku tidak ditemukan." }, { status: 404 });
+    return NextResponse.json({ book: serializeBook(book) });
+  } catch (err) {
+    console.error("Penjualan GET error:", err);
+    return NextResponse.json({ error: "Gagal mengambil data." }, { status: 500 });
   }
-  return NextResponse.json({ book: rows[0] });
 }
 
 export async function POST(req: NextRequest) {
@@ -43,22 +38,13 @@ export async function POST(req: NextRequest) {
 
     let id = genId();
     for (let attempt = 0; attempt < 5; attempt++) {
-      const check = await fetch(
-        `${SUPABASE_URL}/rest/v1/ledger_books?id=eq.${id}&select=id`,
-        { headers: sbHeaders }
-      );
-      const existing = await check.json();
-      if (!Array.isArray(existing) || existing.length === 0) break;
+      const existing = await prisma.ledgerBook.findUnique({ where: { id }, select: { id: true } });
+      if (!existing) break;
       id = genId();
     }
 
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/ledger_books`, {
-      method: "POST",
-      headers: { ...sbHeaders, "Prefer": "return=representation" },
-      body: JSON.stringify({ id, nama_usaha }),
-    });
-    const inserted = await res.json();
-    return NextResponse.json({ book: inserted[0] });
+    const book = await prisma.ledgerBook.create({ data: { id, nama_usaha } });
+    return NextResponse.json({ book: serializeBook(book) });
   } catch (err) {
     console.error("Penjualan POST error:", err);
     return NextResponse.json({ error: "Gagal membuat buku." }, { status: 500 });
@@ -74,10 +60,9 @@ export async function PATCH(req: NextRequest) {
     if (!id || !nama_usaha?.trim()) {
       return NextResponse.json({ error: "ID dan nama wajib." }, { status: 400 });
     }
-    await fetch(`${SUPABASE_URL}/rest/v1/ledger_books?id=eq.${encodeURIComponent(id)}`, {
-      method: "PATCH",
-      headers: { ...sbHeaders, "Prefer": "return=minimal" },
-      body: JSON.stringify({ nama_usaha: nama_usaha.trim() }),
+    await prisma.ledgerBook.update({
+      where: { id },
+      data: { nama_usaha: nama_usaha.trim() },
     });
     return NextResponse.json({ success: true });
   } catch (err) {

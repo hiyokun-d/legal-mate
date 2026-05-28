@@ -1,14 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateToken } from "@/app/api/token/route";
-
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-const sbHeaders = {
-  "Content-Type": "application/json",
-  "apikey": SUPABASE_KEY,
-  "Authorization": `Bearer ${SUPABASE_KEY}`,
-};
+import { prisma } from "@/lib/prisma";
 
 export interface BlacklistReport {
   id: number;
@@ -22,38 +14,52 @@ export interface BlacklistReport {
   created_at: string;
 }
 
+function serialize(r: {
+  id: bigint; nama: string; jenis: string; modus: string;
+  lokasi: string; kontak: string; scam_score: number; upvotes: number; created_at: Date;
+}): BlacklistReport {
+  return {
+    id: Number(r.id),
+    nama: r.nama,
+    jenis: r.jenis,
+    modus: r.modus,
+    lokasi: r.lokasi,
+    kontak: r.kontak,
+    scam_score: r.scam_score,
+    upvotes: r.upvotes,
+    created_at: r.created_at.toISOString(),
+  };
+}
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const q = searchParams.get("q") ?? "";
     const page = parseInt(searchParams.get("page") ?? "1");
     const limit = 10;
-    const offset = (page - 1) * limit;
+    const skip = (page - 1) * limit;
 
-    let filter = "";
-    if (q) {
-      const eq = encodeURIComponent(q);
-      filter = `&or=(nama.ilike.*${eq}*,modus.ilike.*${eq}*,jenis.ilike.*${eq}*)`;
-    }
+    const where = q
+      ? {
+          OR: [
+            { nama: { contains: q, mode: "insensitive" as const } },
+            { modus: { contains: q, mode: "insensitive" as const } },
+            { jenis: { contains: q, mode: "insensitive" as const } },
+          ],
+        }
+      : {};
 
-    const [dataRes, countRes] = await Promise.all([
-      fetch(
-        `${SUPABASE_URL}/rest/v1/reports?select=*&order=upvotes.desc,created_at.desc&limit=${limit}&offset=${offset}${filter}`,
-        { headers: sbHeaders }
-      ),
-      fetch(
-        `${SUPABASE_URL}/rest/v1/reports?select=id${filter}`,
-        { headers: { ...sbHeaders, "Prefer": "count=exact" } }
-      ),
+    const [reports, total] = await Promise.all([
+      prisma.report.findMany({
+        where,
+        orderBy: [{ upvotes: "desc" }, { created_at: "desc" }],
+        take: limit,
+        skip,
+      }),
+      prisma.report.count({ where }),
     ]);
 
-    if (!dataRes.ok) throw new Error(`Supabase data error ${dataRes.status}`);
-    if (!countRes.ok) throw new Error(`Supabase count error ${countRes.status}`);
-
-    const reports: BlacklistReport[] = await dataRes.json();
-    const total = parseInt(countRes.headers.get("content-range")?.split("/")[1] ?? "0");
-
-    return NextResponse.json({ reports, total, page, limit });
+    return NextResponse.json({ reports: reports.map(serialize), total, page, limit });
   } catch (err) {
     console.error("Blacklist GET error:", err);
     return NextResponse.json({ error: "Gagal mengambil data." }, { status: 500 });
@@ -85,41 +91,30 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Scam score tidak valid (0–100)." }, { status: 400 });
     }
 
-    const checkRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/reports?select=id,upvotes&nama=ilike.${encodeURIComponent(nama.trim())}&limit=1`,
-      { headers: sbHeaders }
-    );
-    const existing: BlacklistReport[] = await checkRes.json();
+    const existing = await prisma.report.findFirst({
+      where: { nama: { equals: String(nama).trim(), mode: "insensitive" } },
+      select: { id: true },
+    });
 
-    if (existing.length > 0) {
-      await fetch(
-        `${SUPABASE_URL}/rest/v1/reports?id=eq.${existing[0].id}`,
-        {
-          method: "PATCH",
-          headers: { ...sbHeaders, "Prefer": "return=minimal" },
-          body: JSON.stringify({ upvotes: existing[0].upvotes + 1 }),
-        }
-      );
-      return NextResponse.json({ action: "upvoted", id: existing[0].id });
+    if (existing) {
+      await prisma.report.update({
+        where: { id: existing.id },
+        data: { upvotes: { increment: 1 } },
+      });
+      return NextResponse.json({ action: "upvoted", id: Number(existing.id) });
     }
 
-    const insertRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/reports`,
-      {
-        method: "POST",
-        headers: { ...sbHeaders, "Prefer": "return=representation" },
-        body: JSON.stringify({
-          nama: String(nama).trim(),
-          jenis: String(jenis).trim(),
-          modus: String(modus).trim(),
-          lokasi: (lokasi ? String(lokasi) : "").trim(),
-          kontak: (kontak ? String(kontak) : "").trim(),
-          scam_score: isNaN(score) ? 0 : score,
-        }),
-      }
-    );
-    const inserted = await insertRes.json();
-    return NextResponse.json({ action: "created", id: inserted[0]?.id ?? 0 });
+    const created = await prisma.report.create({
+      data: {
+        nama: String(nama).trim(),
+        jenis: String(jenis).trim(),
+        modus: String(modus).trim(),
+        lokasi: lokasi ? String(lokasi).trim() : "",
+        kontak: kontak ? String(kontak).trim() : "",
+        scam_score: isNaN(score) ? 0 : score,
+      },
+    });
+    return NextResponse.json({ action: "created", id: Number(created.id) });
   } catch (err) {
     console.error("Blacklist POST error:", err);
     return NextResponse.json({ error: "Gagal menyimpan laporan." }, { status: 500 });
@@ -134,21 +129,16 @@ export async function PATCH(req: NextRequest) {
     const { id } = await req.json();
     if (!id) return NextResponse.json({ error: "ID wajib." }, { status: 400 });
 
-    const getRes = await fetch(
-      `${SUPABASE_URL}/rest/v1/reports?select=upvotes&id=eq.${id}`,
-      { headers: sbHeaders }
-    );
-    const rows: { upvotes: number }[] = await getRes.json();
-    if (!rows.length) return NextResponse.json({ error: "Not found." }, { status: 404 });
+    const existing = await prisma.report.findUnique({
+      where: { id: BigInt(id) },
+      select: { id: true },
+    });
+    if (!existing) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
-    await fetch(
-      `${SUPABASE_URL}/rest/v1/reports?id=eq.${id}`,
-      {
-        method: "PATCH",
-        headers: { ...sbHeaders, "Prefer": "return=minimal" },
-        body: JSON.stringify({ upvotes: rows[0].upvotes + 1 }),
-      }
-    );
+    await prisma.report.update({
+      where: { id: BigInt(id) },
+      data: { upvotes: { increment: 1 } },
+    });
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Blacklist PATCH error:", err);

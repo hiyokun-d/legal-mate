@@ -75,7 +75,9 @@ export default function LedgerPage() {
   const fetchBook = useCallback(async () => {
     const res = await fetch(`/api/penjualan?id=${encodeURIComponent(bookId)}`);
     if (res.status === 404) { setNotFound(true); setLoading(false); return; }
+    if (!res.ok) { setNotFound(true); setLoading(false); return; }
     const data = await res.json();
+    if (!data.book) { setNotFound(true); setLoading(false); return; }
     setBook(data.book);
     setNameVal(data.book.nama_usaha);
   }, [bookId]);
