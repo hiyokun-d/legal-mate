@@ -43,6 +43,9 @@ export async function POST(req: NextRequest) {
     if (!report_id || !isi?.trim()) {
       return NextResponse.json({ error: "report_id dan isi wajib." }, { status: 400 });
     }
+    if (String(isi).trim().length > 1000) {
+      return NextResponse.json({ error: "Komentar terlalu panjang (maks 1000 karakter)." }, { status: 400 });
+    }
 
     const res = await fetch(`${SUPABASE_URL}/rest/v1/comments`, {
       method: "POST",
@@ -51,7 +54,8 @@ export async function POST(req: NextRequest) {
     });
     const inserted = await res.json();
     return NextResponse.json({ comment: inserted[0] });
-  } catch {
+  } catch (err) {
+    console.error("Comment POST error:", err);
     return NextResponse.json({ error: "Gagal menyimpan komentar." }, { status: 500 });
   }
 }

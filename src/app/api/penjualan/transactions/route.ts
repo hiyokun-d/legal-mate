@@ -22,16 +22,22 @@ export interface Transaction {
 }
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const book_id = searchParams.get("book_id");
-  if (!book_id) return NextResponse.json({ transactions: [] });
+  try {
+    const { searchParams } = new URL(req.url);
+    const book_id = searchParams.get("book_id");
+    if (!book_id) return NextResponse.json({ transactions: [] });
 
-  const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/transactions?book_id=eq.${encodeURIComponent(book_id)}&order=tanggal.desc,created_at.desc&select=*`,
-    { headers: sbHeaders }
-  );
-  const transactions = await res.json();
-  return NextResponse.json({ transactions: Array.isArray(transactions) ? transactions : [] });
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/transactions?book_id=eq.${encodeURIComponent(book_id)}&order=tanggal.desc,created_at.desc&select=*`,
+      { headers: sbHeaders }
+    );
+    if (!res.ok) throw new Error(`Supabase error ${res.status}`);
+    const transactions = await res.json();
+    return NextResponse.json({ transactions: Array.isArray(transactions) ? transactions : [] });
+  } catch (err) {
+    console.error("Transactions GET error:", err);
+    return NextResponse.json({ transactions: [] });
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -48,6 +54,10 @@ export async function POST(req: NextRequest) {
     if (!["pemasukan", "pengeluaran"].includes(jenis)) {
       return NextResponse.json({ error: "Jenis tidak valid." }, { status: 400 });
     }
+    const n = parseInt(String(nominal), 10);
+    if (isNaN(n) || n <= 0) {
+      return NextResponse.json({ error: "Nominal tidak valid." }, { status: 400 });
+    }
 
     const res = await fetch(`${SUPABASE_URL}/rest/v1/transactions`, {
       method: "POST",
@@ -58,12 +68,13 @@ export async function POST(req: NextRequest) {
         keterangan: keterangan.trim(),
         kategori,
         jenis,
-        nominal: Math.abs(parseInt(String(nominal))),
+        nominal: n,
       }),
     });
     const inserted = await res.json();
     return NextResponse.json({ transaction: inserted[0] });
-  } catch {
+  } catch (err) {
+    console.error("Transactions POST error:", err);
     return NextResponse.json({ error: "Gagal menyimpan transaksi." }, { status: 500 });
   }
 }
@@ -81,7 +92,8 @@ export async function DELETE(req: NextRequest) {
       headers: { ...sbHeaders, "Prefer": "return=minimal" },
     });
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (err) {
+    console.error("Transactions DELETE error:", err);
     return NextResponse.json({ error: "Gagal menghapus transaksi." }, { status: 500 });
   }
 }

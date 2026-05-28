@@ -59,7 +59,8 @@ export async function POST(req: NextRequest) {
     });
     const inserted = await res.json();
     return NextResponse.json({ book: inserted[0] });
-  } catch {
+  } catch (err) {
+    console.error("Penjualan POST error:", err);
     return NextResponse.json({ error: "Gagal membuat buku." }, { status: 500 });
   }
 }
@@ -79,7 +80,8 @@ export async function PATCH(req: NextRequest) {
       body: JSON.stringify({ nama_usaha: nama_usaha.trim() }),
     });
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (err) {
+    console.error("Penjualan PATCH error:", err);
     return NextResponse.json({ error: "Gagal mengupdate nama." }, { status: 500 });
   }
 }

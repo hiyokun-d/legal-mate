@@ -119,9 +119,10 @@ export async function POST(req: NextRequest) {
         { role: "user", content: [{ type: "text", text: SYSTEM_PROMPT }, ...fileParts] },
       ];
     } else if (body.mode === "chat") {
+      const cappedHistory = body.history.slice(-20);
       contents = [
         { role: "user", content: SYSTEM_PROMPT },
-        ...body.history.map((msg) =>
+        ...cappedHistory.map((msg) =>
           msg.role === "user"
             ? { role: "user" as const, content: msg.content }
             : { role: "assistant" as const, content: msg.content },
@@ -168,7 +169,16 @@ Format JSON:
 
     const koboiData = await koboi.json();
     const text = koboiData.choices?.[0]?.message?.content ?? "{}";
-    const parsed = JSON.parse(text);
+    let parsed: Record<string, unknown>;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      console.error("Failed to parse AI JSON response:", text?.slice(0, 300));
+      return NextResponse.json(
+        { error: "AI memberikan respons tidak valid. Coba lagi." },
+        { status: 500 },
+      );
+    }
     const tokenUsage = koboiData.usage?.total_tokens ?? 0;
     return NextResponse.json({ ...parsed, _tokenUsage: tokenUsage });
   } catch (err) {

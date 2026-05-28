@@ -45,12 +45,20 @@ export default function Dropzone({
     if (e.target.files?.length) { validateAndAdd(Array.from(e.target.files)); e.target.value = ""; }
   };
 
+  const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+
   const validateAndAdd = (incoming: File[]) => {
     const valid: File[] = [];
     const existingNames = new Set(files.map((f) => f.name));
     for (const file of incoming) {
       if (!ValidFileType.includes(file.type)) {
         toast.error(`Format tidak didukung: ${file.name}`, { description: "Gunakan PDF, DOCX, JPG, atau PNG." });
+        continue;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(`File terlalu besar: ${file.name}`, {
+          description: `Ukuran maks 20MB. File ini ${(file.size / 1024 / 1024).toFixed(1)}MB.`,
+        });
         continue;
       }
       if (existingNames.has(file.name)) { toast.info(`File sudah ada: ${file.name}`); continue; }

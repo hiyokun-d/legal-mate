@@ -31,7 +31,10 @@ export async function GET(req: NextRequest) {
     const offset = (page - 1) * limit;
 
     let filter = "";
-    if (q) filter = `&or=(nama.ilike.*${q}*,modus.ilike.*${q}*,jenis.ilike.*${q}*)`;
+    if (q) {
+      const eq = encodeURIComponent(q);
+      filter = `&or=(nama.ilike.*${eq}*,modus.ilike.*${eq}*,jenis.ilike.*${eq}*)`;
+    }
 
     const [dataRes, countRes] = await Promise.all([
       fetch(
@@ -43,6 +46,9 @@ export async function GET(req: NextRequest) {
         { headers: { ...sbHeaders, "Prefer": "count=exact" } }
       ),
     ]);
+
+    if (!dataRes.ok) throw new Error(`Supabase data error ${dataRes.status}`);
+    if (!countRes.ok) throw new Error(`Supabase count error ${countRes.status}`);
 
     const reports: BlacklistReport[] = await dataRes.json();
     const total = parseInt(countRes.headers.get("content-range")?.split("/")[1] ?? "0");
@@ -64,6 +70,19 @@ export async function POST(req: NextRequest) {
 
     if (!nama || !jenis || !modus) {
       return NextResponse.json({ error: "Nama, jenis, dan modus wajib diisi." }, { status: 400 });
+    }
+    if (String(nama).length > 200 || String(jenis).length > 100 || String(modus).length > 1000) {
+      return NextResponse.json({ error: "Input terlalu panjang." }, { status: 400 });
+    }
+    if (lokasi && String(lokasi).length > 200) {
+      return NextResponse.json({ error: "Lokasi terlalu panjang." }, { status: 400 });
+    }
+    if (kontak && String(kontak).length > 200) {
+      return NextResponse.json({ error: "Kontak terlalu panjang." }, { status: 400 });
+    }
+    const score = Number(scam_score);
+    if (scam_score !== undefined && (isNaN(score) || score < 0 || score > 100)) {
+      return NextResponse.json({ error: "Scam score tidak valid (0–100)." }, { status: 400 });
     }
 
     const checkRes = await fetch(
@@ -90,12 +109,12 @@ export async function POST(req: NextRequest) {
         method: "POST",
         headers: { ...sbHeaders, "Prefer": "return=representation" },
         body: JSON.stringify({
-          nama: nama.trim(),
-          jenis: jenis.trim(),
-          modus: modus.trim(),
-          lokasi: (lokasi ?? "").trim(),
-          kontak: (kontak ?? "").trim(),
-          scam_score: scam_score ?? 0,
+          nama: String(nama).trim(),
+          jenis: String(jenis).trim(),
+          modus: String(modus).trim(),
+          lokasi: (lokasi ? String(lokasi) : "").trim(),
+          kontak: (kontak ? String(kontak) : "").trim(),
+          scam_score: isNaN(score) ? 0 : score,
         }),
       }
     );

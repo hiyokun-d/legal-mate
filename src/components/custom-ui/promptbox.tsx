@@ -5,12 +5,12 @@ import { motion } from "framer-motion";
 import { SendHorizontal } from "lucide-react";
 import React, { useRef, useState } from "react";
 
-interface promptBoxProps {
+interface PromptBoxProps {
   isDragging: boolean;
   onSubmit: (text: string) => void;
 }
 
-export default function PromptBox({ isDragging, onSubmit }: promptBoxProps) {
+export default function PromptBox({ isDragging, onSubmit }: PromptBoxProps) {
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 

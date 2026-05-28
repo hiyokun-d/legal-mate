@@ -74,7 +74,7 @@ async function fetchQuery(query: string): Promise<NewsItem[]> {
 export async function GET() {
   if (cache && Date.now() - cache.ts < CACHE_TTL) {
     return NextResponse.json(cache.data, {
-      headers: { "X-Cache": "HIT", "Cache-Control": "no-store" },
+      headers: { "X-Cache": "HIT", "Cache-Control": "s-maxage=60, stale-while-revalidate=30" },
     });
   }
 
@@ -106,7 +106,7 @@ export async function GET() {
     const data = deduped.slice(0, 15);
     cache = { data, ts: Date.now() };
     return NextResponse.json(data, {
-      headers: { "X-Cache": "MISS", "Cache-Control": "no-store" },
+      headers: { "X-Cache": "MISS", "Cache-Control": "s-maxage=60, stale-while-revalidate=30" },
     });
   } catch {
     const fallback = cache?.data ?? [];

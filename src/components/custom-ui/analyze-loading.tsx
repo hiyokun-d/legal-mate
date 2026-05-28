@@ -11,7 +11,7 @@ const steps = [
   "Menyusun laporan analisis...",
 ];
 
-interface analyzeLoadingProps {
+interface AnalyzeLoadingProps {
   onComplete: () => void;
 }
 
@@ -30,7 +30,7 @@ function ThinkingDots() {
   );
 }
 
-export default function AnalyzeLoading({ onComplete }: analyzeLoadingProps) {
+export default function AnalyzeLoading({ onComplete }: AnalyzeLoadingProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const onCompleteRef = useRef(onComplete);
   useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);

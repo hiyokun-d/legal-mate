@@ -4,7 +4,7 @@ import { SadaAvatar } from "@/components/custom-ui/sada-avatar";
 import { motion } from "framer-motion";
 import { ArrowRight, FileSearch, ShieldCheck, Zap } from "lucide-react";
 
-interface analyzeConfirmProps {
+interface AnalyzeConfirmProps {
   onConfirm: () => void;
 }
 
@@ -14,7 +14,7 @@ const features = [
   { icon: Zap, text: "Rekomendasi tindakan spesifik" },
 ];
 
-export default function AnalyzeConfirm({ onConfirm }: analyzeConfirmProps) {
+export default function AnalyzeConfirm({ onConfirm }: AnalyzeConfirmProps) {
   return (
     <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md shadow-slate-200/80 dark:shadow-black/20 space-y-5">
       {/* Sada greeting */}

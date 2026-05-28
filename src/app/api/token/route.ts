@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { randomUUID } from "crypto";
+import { createHmac, randomUUID } from "crypto";
 
-// In-memory token store: token -> expires timestamp
-const tokenStore = new Map<string, number>();
-
-// Cleanup expired tokens tiap 5 menit
-setInterval(() => {
-  const now = Date.now();
-  for (const [token, expires] of tokenStore.entries()) {
-    if (expires < now) tokenStore.delete(token);
-  }
-}, 5 * 60 * 1000);
+// Stateless HMAC-signed tokens — works across Vercel serverless instances (no shared Map)
+// Format: base64url(uuid.expiry) + "." + base64url(HMAC-SHA256)
+const SECRET = process.env.KOBOI_API_KEY ?? "dev-secret-not-for-prod";
+const TOKEN_TTL_MS = 60_000;
 
 const ALLOWED_ORIGINS = [
   process.env.NEXT_PUBLIC_APP_URL,
@@ -21,10 +15,16 @@ const ALLOWED_ORIGINS = [
 function isOriginAllowed(req: NextRequest): boolean {
   if (process.env.NODE_ENV !== "production") return true;
   const origin = req.headers.get("origin") ?? req.headers.get("referer") ?? "";
-  // Allow Vercel deployments (.vercel.app) dan custom domain dari NEXT_PUBLIC_APP_URL
   if (origin.endsWith(".vercel.app") || origin.includes("vercel.app")) return true;
-  if (ALLOWED_ORIGINS.length === 0) return true; // fallback jika env belum di-set
+  if (ALLOWED_ORIGINS.length === 0) {
+    console.warn("[token] NEXT_PUBLIC_APP_URL not set — origin check skipped");
+    return true;
+  }
   return ALLOWED_ORIGINS.some((o) => origin.startsWith(o));
+}
+
+function sign(payload: string): string {
+  return createHmac("sha256", SECRET).update(payload).digest("base64url");
 }
 
 export async function GET(req: NextRequest) {
@@ -32,31 +32,40 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 403 });
   }
 
-  const token = randomUUID();
-  tokenStore.set(token, Date.now() + 60_000); // valid 60 detik
+  const exp = Date.now() + TOKEN_TTL_MS;
+  const raw = `${randomUUID()}|${exp}`;
+  const encodedPayload = Buffer.from(raw).toString("base64url");
+  const token = `${encodedPayload}.${sign(encodedPayload)}`;
 
   return NextResponse.json({ token });
 }
 
 // Validator — diimpor oleh route lain
 export function validateToken(req: NextRequest): { valid: boolean; error?: string } {
-  // Layer 2: Origin
   if (!isOriginAllowed(req)) {
     return { valid: false, error: "Unauthorized origin." };
   }
 
-  // Layer 1: One-time token
   const token = req.headers.get("x-request-token");
   if (!token) return { valid: false, error: "Missing token." };
 
-  const expires = tokenStore.get(token);
-  if (!expires) return { valid: false, error: "Invalid token." };
-  if (expires < Date.now()) {
-    tokenStore.delete(token);
-    return { valid: false, error: "Token expired." };
+  const dotIdx = token.lastIndexOf(".");
+  if (dotIdx === -1) return { valid: false, error: "Invalid token." };
+
+  const encodedPayload = token.slice(0, dotIdx);
+  const sig = token.slice(dotIdx + 1);
+
+  if (sig !== sign(encodedPayload)) return { valid: false, error: "Invalid token." };
+
+  let raw: string;
+  try {
+    raw = Buffer.from(encodedPayload, "base64url").toString("utf-8");
+  } catch {
+    return { valid: false, error: "Invalid token." };
   }
 
-  // Hapus setelah dipakai — one-time!
-  tokenStore.delete(token);
+  const exp = parseInt(raw.split("|")[1] ?? "0", 10);
+  if (!exp || Date.now() > exp) return { valid: false, error: "Token expired." };
+
   return { valid: true };
 }
