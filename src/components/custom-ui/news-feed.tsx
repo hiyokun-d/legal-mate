@@ -17,9 +17,9 @@ function timeAgo(dateStr: string): string {
 function riskTag(title: string): { label: string; color: string } {
   const t = title.toLowerCase();
   if (t.includes("penipuan") || t.includes("scam") || t.includes("tipu") || t.includes("modus"))
-    return { label: "Penipuan", color: "bg-red-500/20 text-red-300 border-red-500/30" };
+    return { label: "Penipuan", color: "bg-red-50 dark:bg-red-500/20 text-red-700 dark:text-red-300 border-red-200 dark:border-red-500/30" };
   if (t.includes("investasi") || t.includes("bodong") || t.includes("palsu") || t.includes("ilegal"))
-    return { label: "Investasi Bodong", color: "bg-orange-500/20 text-orange-300 border-orange-500/30" };
+    return { label: "Investasi Bodong", color: "bg-orange-50 dark:bg-orange-500/20 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-500/30" };
   if (t.includes("kontrak") || t.includes("perjanjian") || t.includes("klausul"))
     return { label: "Kontrak", color: "bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-500/30" };
   return { label: "Waspada", color: "bg-yellow-50 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-500/30" };
