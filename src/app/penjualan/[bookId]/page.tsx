@@ -54,12 +54,12 @@ export default function LedgerPage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
-  // Editable name
+  
   const [editingName, setEditingName] = useState(false);
   const [nameVal, setNameVal] = useState("");
   const nameRef = useRef<HTMLInputElement>(null);
 
-  // Form
+  
   const [jenis, setJenis] = useState<"pemasukan" | "pengeluaran">("pemasukan");
   const [tanggal, setTanggal] = useState(today());
   const [keterangan, setKeterangan] = useState("");
@@ -67,11 +67,11 @@ export default function LedgerPage() {
   const [nominal, setNominal] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Filters
+  
   const [filter, setFilter] = useState<Filter>("bulan");
   const [jenisFilter, setJenisFilter] = useState<JenisFilter>("semua");
 
-  // Fetch book
+  
   const fetchBook = useCallback(async () => {
     const res = await fetch(`/api/penjualan?id=${encodeURIComponent(bookId)}`);
     if (res.status === 404) { setNotFound(true); setLoading(false); return; }
@@ -82,7 +82,7 @@ export default function LedgerPage() {
     setNameVal(data.book.nama_usaha);
   }, [bookId]);
 
-  // Fetch transactions
+  
   const fetchTxs = useCallback(async () => {
     const res = await fetch(`/api/penjualan/transactions?book_id=${encodeURIComponent(bookId)}`);
     const data = await res.json();
@@ -93,7 +93,7 @@ export default function LedgerPage() {
     Promise.all([fetchBook(), fetchTxs()]).finally(() => setLoading(false));
   }, [fetchBook, fetchTxs]);
 
-  // Save ID to localStorage
+  
   useEffect(() => {
     if (!book) return;
     try {
@@ -103,7 +103,7 @@ export default function LedgerPage() {
     } catch {}
   }, [book, bookId]);
 
-  // Summary
+  
   const summary = useMemo(() => {
     const totalPemasukan = txs.filter(t => t.jenis === "pemasukan").reduce((s, t) => s + t.nominal, 0);
     const totalPengeluaran = txs.filter(t => t.jenis === "pengeluaran").reduce((s, t) => s + t.nominal, 0);
@@ -112,7 +112,7 @@ export default function LedgerPage() {
     return { totalPemasukan, totalPengeluaran, saldo: totalPemasukan - totalPengeluaran, txBulan };
   }, [txs]);
 
-  // Chart data — last 7 days
+  
   const chartData = useMemo(() => {
     const days: string[] = [];
     for (let i = 6; i >= 0; i--) {
@@ -126,7 +126,7 @@ export default function LedgerPage() {
     }));
   }, [txs]);
 
-  // Filtered txs
+  
   const filteredTxs = useMemo(() => {
     let res = [...txs];
     if (jenisFilter !== "semua") res = res.filter(t => t.jenis === jenisFilter);
@@ -140,7 +140,7 @@ export default function LedgerPage() {
     return res;
   }, [txs, filter, jenisFilter]);
 
-  // Submit transaction
+  
   const handleSubmit = async () => {
     const nominalNum = parseInt(nominal.replace(/\./g, ""));
     if (!keterangan.trim() || !tanggal || isNaN(nominalNum) || nominalNum <= 0) {
@@ -165,7 +165,7 @@ export default function LedgerPage() {
     }
   };
 
-  // Delete transaction
+  
   const handleDelete = async (id: number) => {
     setTxs(prev => prev.filter(t => t.id !== id));
     try {
@@ -176,7 +176,7 @@ export default function LedgerPage() {
     }
   };
 
-  // Save name
+  
   const handleSaveName = async () => {
     if (!nameVal.trim() || !book) return;
     setEditingName(false);
@@ -188,7 +188,7 @@ export default function LedgerPage() {
     }
   };
 
-  // Export
+  
   const handleExport = () => {
     const lines = [
       `=== CATATAN PENJUALAN ===`,
@@ -231,7 +231,7 @@ export default function LedgerPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
-      {/* Header */}
+      
       <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
@@ -275,7 +275,7 @@ export default function LedgerPage() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-6 space-y-5">
-        {/* Summary Cards */}
+        
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
             { label: "Total Pemasukan", val: fmtRp(summary.totalPemasukan), icon: ArrowUpCircle, color: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-950/30" },
@@ -293,7 +293,7 @@ export default function LedgerPage() {
           ))}
         </div>
 
-        {/* Chart */}
+        
         <div className={`${card} p-4 space-y-3`}>
           <div className="flex items-center gap-2">
             <TrendingUp className="size-4 text-slate-400" />
@@ -315,14 +315,14 @@ export default function LedgerPage() {
           </ResponsiveContainer>
         </div>
 
-        {/* Add Transaction Form */}
+        
         <div className={`${card} p-4 space-y-4`}>
           <div className="flex items-center gap-2">
             <Plus className="size-4 text-slate-400" />
             <p className="text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide">Catat Transaksi</p>
           </div>
 
-          {/* Jenis toggle */}
+          
           <div className="flex rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
             <button
               onClick={() => { setJenis("pemasukan"); setKategori(PEMASUKAN_KAT[0]); }}
@@ -339,12 +339,12 @@ export default function LedgerPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            {/* Tanggal */}
+            
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Tanggal</label>
               <input type="date" className={inp} value={tanggal} onChange={e => setTanggal(e.target.value)} />
             </div>
-            {/* Kategori */}
+            
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Kategori</label>
               <div className="relative">
@@ -394,9 +394,9 @@ export default function LedgerPage() {
           </button>
         </div>
 
-        {/* Transaction List */}
+        
         <div className="space-y-3">
-          {/* Filters */}
+          
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex gap-1">
               {(["minggu","bulan","semua"] as Filter[]).map(f => (

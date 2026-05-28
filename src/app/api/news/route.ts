@@ -46,7 +46,7 @@ function parseRSSItems(xml: string): NewsItem[] {
 
     if (!title) continue;
 
-    // strip source name appended by Google News "Title - Source"
+    
     const cleanTitle = title.replace(/\s*-\s*[^-]+$/, "").trim() || title;
     const cleanSource = source.replace(/<!\[CDATA\[|\]\]>/g, "").trim();
 

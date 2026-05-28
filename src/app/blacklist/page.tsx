@@ -14,7 +14,7 @@ export default function BlacklistPage() {
 
   return (
     <>
-      {/* Header */}
+      
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/85 dark:bg-[#0A0805]/90 backdrop-blur-xl border-b border-amber-500/10 dark:border-amber-500/15">
         <div className="flex items-center justify-between px-4 h-14">
           <div className="flex items-center gap-3">
@@ -62,7 +62,7 @@ export default function BlacklistPage() {
       <main className="pt-14 min-h-screen bg-slate-50 dark:bg-slate-950">
         <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
 
-          {/* Hero */}
+          
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -81,7 +81,7 @@ export default function BlacklistPage() {
             </p>
           </motion.div>
 
-          {/* Form (collapsible) */}
+          
           {showForm && (
             <motion.div
               initial={{ opacity: 0, y: -8 }}
@@ -98,7 +98,7 @@ export default function BlacklistPage() {
             </motion.div>
           )}
 
-          {/* Feed */}
+          
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}

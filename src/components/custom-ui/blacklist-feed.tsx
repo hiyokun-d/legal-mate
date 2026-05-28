@@ -94,7 +94,7 @@ function CommentSection({ reportId }: { reportId: number }) {
         </div>
       )}
 
-      {/* Input */}
+      
       <div className="flex gap-2">
         <input
           className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-400 transition-all"
@@ -142,7 +142,7 @@ export default function BlacklistFeed({ refreshKey }: { refreshKey?: number }) {
 
   useEffect(() => { fetchReports(search); }, [fetchReports, search, refreshKey]);
 
-  // Fetch comment counts after reports load
+  
   useEffect(() => {
     if (reports.length === 0) return;
     Promise.all(
@@ -180,7 +180,7 @@ export default function BlacklistFeed({ refreshKey }: { refreshKey?: number }) {
 
   return (
     <div className="space-y-4">
-      {/* Header stats */}
+      
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Users className="size-4 text-slate-400 dark:text-slate-500" />
@@ -191,7 +191,7 @@ export default function BlacklistFeed({ refreshKey }: { refreshKey?: number }) {
         </span>
       </div>
 
-      {/* Search */}
+      
       <div className="flex gap-2">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-slate-400" />
@@ -211,7 +211,7 @@ export default function BlacklistFeed({ refreshKey }: { refreshKey?: number }) {
         </button>
       </div>
 
-      {/* List */}
+      
       {loading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="size-5 text-amber-500 animate-spin" />
@@ -227,7 +227,7 @@ export default function BlacklistFeed({ refreshKey }: { refreshKey?: number }) {
         <div className="space-y-3">
           {reports.map(report => (
             <div key={report.id} className={`${card} p-4 space-y-3`}>
-              {/* Header */}
+              
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -241,7 +241,7 @@ export default function BlacklistFeed({ refreshKey }: { refreshKey?: number }) {
                   </p>
                 </div>
 
-                {/* Upvote */}
+                
                 <button
                   onClick={() => handleUpvote(report.id)}
                   disabled={upvoted.has(report.id)}
@@ -252,7 +252,7 @@ export default function BlacklistFeed({ refreshKey }: { refreshKey?: number }) {
                 </button>
               </div>
 
-              {/* Scam score */}
+              
               {report.scam_score > 0 && (
                 <div className="space-y-1">
                   <div className="flex justify-between text-[10px] text-slate-400 dark:text-slate-500">
@@ -265,13 +265,13 @@ export default function BlacklistFeed({ refreshKey }: { refreshKey?: number }) {
                 </div>
               )}
 
-              {/* Modus */}
+              
               <div className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 rounded-xl px-3 py-2.5 border border-slate-100 dark:border-slate-700">
                 <AlertTriangle className="size-3.5 text-amber-400 shrink-0 mt-0.5" />
                 <p className="leading-relaxed">{report.modus}</p>
               </div>
 
-              {/* Kontak + Lokasi */}
+              
               {report.kontak && (
                 <div className="flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
                   <Phone className="size-3" /><span>{report.kontak}</span>
@@ -283,7 +283,7 @@ export default function BlacklistFeed({ refreshKey }: { refreshKey?: number }) {
                 </div>
               )}
 
-              {/* Comment toggle button */}
+              
               <button
                 onClick={() => toggleComments(report.id)}
                 className={`flex items-center gap-1.5 w-full px-3 py-2 rounded-xl border text-xs font-semibold transition-all ${openComments.has(report.id) ? "bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/50 text-emerald-600 dark:text-emerald-400" : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-emerald-300 dark:hover:border-emerald-700 hover:text-emerald-600 dark:hover:text-emerald-400"}`}
@@ -295,7 +295,7 @@ export default function BlacklistFeed({ refreshKey }: { refreshKey?: number }) {
                 {openComments.has(report.id) ? <ChevronUp className="size-3 ml-auto" /> : <ChevronDown className="size-3 ml-auto" />}
               </button>
 
-              {/* Comment section */}
+              
               {openComments.has(report.id) && <CommentSection reportId={report.id} />}
             </div>
           ))}

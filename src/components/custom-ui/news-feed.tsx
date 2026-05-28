@@ -55,7 +55,7 @@ export default function NewsFeed() {
 
   return (
     <section className="w-full max-w-7xl mx-auto px-6 py-16 space-y-8">
-      {/* Header */}
+      
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-3">
@@ -87,7 +87,7 @@ export default function NewsFeed() {
         </div>
       </div>
 
-      {/* Grid */}
+      
       {loading && items.length === 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (

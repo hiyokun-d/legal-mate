@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-[#0A0805] text-slate-900 dark:text-white selection:bg-amber-500/30">
 
-      {/* ── NAV ── */}
+      
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-[#0A0805]/85 backdrop-blur-xl border-b border-amber-500/10 dark:border-amber-500/15">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 h-16">
           <Link href="/" className="flex items-center gap-2.5 group">
@@ -54,14 +54,14 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* ── TICKER ── */}
+      
       <div className="fixed top-16 left-0 right-0 z-40">
         <NewsTicker />
       </div>
 
-      {/* ── HERO ── */}
+      
       <section className="relative min-h-screen flex flex-col items-center justify-center pt-40 pb-24 px-6 overflow-hidden">
-        {/* Grid background */}
+        
         <div
           className="absolute inset-0 opacity-[0.035] dark:opacity-[0.04]"
           style={{
@@ -70,19 +70,19 @@ export default function Home() {
             backgroundSize: "48px 48px",
           }}
         />
-        {/* Glow orbs */}
+        
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-amber-500/8 dark:bg-amber-500/10 rounded-full blur-[130px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-red-600/5 dark:bg-red-600/8 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute top-20 left-0 w-[300px] h-[300px] bg-amber-400/5 dark:bg-amber-400/6 rounded-full blur-[80px] pointer-events-none" />
 
         <div className="relative z-10 flex flex-col items-center text-center max-w-4xl mx-auto space-y-8">
-          {/* Badge */}
+          
           <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-amber-500/40 bg-amber-500/8 dark:bg-amber-500/10 text-amber-700 dark:text-amber-400 text-sm font-semibold">
             <Sparkles className="size-3.5" />
             Didukung Google Gemini AI · Untuk UMKM Indonesia Emas 🇮🇩
           </div>
 
-          {/* Headline */}
+          
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.08] tracking-tight">
             Jangan Tandatangani
             <br />
@@ -91,7 +91,7 @@ export default function Home() {
             </span>
           </h1>
 
-          {/* Subtext */}
+          
           <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
             Penasihat hukum AI khusus UMKM Indonesia. Upload kontrak, surat perjanjian, atau screenshot chat — Sada deteksi{" "}
             <span className="text-red-500 dark:text-red-400 font-semibold">jebakan tersembunyi</span>,{" "}
@@ -100,7 +100,7 @@ export default function Home() {
             dalam hitungan detik.
           </p>
 
-          {/* CTAs */}
+          
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <Link
               href="/app"
@@ -116,7 +116,7 @@ export default function Home() {
             </a>
           </div>
 
-          {/* Stats */}
+          
           <div className="flex flex-wrap justify-center gap-10 pt-4">
             {[
               { value: "100%", label: "Gratis Selamanya" },
@@ -132,7 +132,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Floating card */}
+        
         <div className="relative z-10 mt-16 animate-float">
           <div className="flex items-start gap-3 bg-white dark:bg-[#130F07]/90 shadow-xl shadow-amber-500/5 dark:shadow-black/50 border border-red-200 dark:border-red-500/25 rounded-2xl px-5 py-4 shadow-2xl shadow-black/10 dark:shadow-black/50 max-w-xs">
             <div className="p-2 bg-red-500/10 rounded-lg shrink-0 mt-0.5">
@@ -149,12 +149,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── BREAKING NEWS ── */}
+      
       <div id="berita" className="bg-slate-50 dark:bg-[#0D0A06] border-t border-slate-200 dark:border-amber-500/10 py-8">
         <NewsFeed />
       </div>
 
-      {/* ── HOW IT WORKS ── */}
+      
       <section id="cara-kerja" className="bg-white dark:bg-[#0A0805] border-t border-slate-200 dark:border-amber-500/10 px-6 py-24">
         <div className="max-w-5xl mx-auto space-y-16">
           <div className="text-center space-y-3">
@@ -208,7 +208,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FEATURES ── */}
+      
       <section id="fitur" className="bg-slate-50 dark:bg-[#0D0A06] border-t border-slate-200 dark:border-amber-500/10 px-6 py-24">
         <div className="max-w-5xl mx-auto space-y-12">
           <div className="text-center space-y-3">
@@ -273,7 +273,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── BLACKLIST BANNER ── */}
+      
       <section className="bg-white dark:bg-[#0A0805] border-t border-slate-200 dark:border-amber-500/10 px-6 py-16">
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col md:flex-row items-center gap-8 p-8 rounded-3xl bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/20 dark:to-orange-950/15 border-2 border-red-200 dark:border-red-900/40">
@@ -305,7 +305,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA BANNER ── */}
+      
       <section className="bg-slate-50 dark:bg-[#0D0A06] border-t border-slate-200 dark:border-amber-500/10 px-6 py-24">
         <div className="max-w-3xl mx-auto text-center space-y-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400 text-sm font-semibold">
@@ -333,7 +333,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
+      
       <footer className="border-t border-slate-200 dark:border-amber-500/10 px-6 py-8 bg-white dark:bg-[#0A0805]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">

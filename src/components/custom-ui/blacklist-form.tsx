@@ -86,7 +86,7 @@ export default function BlacklistForm({
         </div>
       )}
 
-      {/* Nama */}
+      
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
           <Building2 className="size-3" />
@@ -100,7 +100,7 @@ export default function BlacklistForm({
         />
       </div>
 
-      {/* Jenis */}
+      
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">
           Jenis Pelanggaran
@@ -122,7 +122,7 @@ export default function BlacklistForm({
         </div>
       </div>
 
-      {/* Modus */}
+      
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">
           Modus / Kronologi Singkat
@@ -136,7 +136,7 @@ export default function BlacklistForm({
         />
       </div>
 
-      {/* Lokasi & Kontak */}
+      
       <div className="grid grid-cols-2 gap-2">
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1">

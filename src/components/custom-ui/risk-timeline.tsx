@@ -68,7 +68,7 @@ export default function RiskTimeline({ timeline, printMode = false }: RiskTimeli
 
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-black/20">
-      {/* Header */}
+      
       <div className="px-4 pt-4 pb-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-2 mb-3">
           <Eye className="size-4 text-slate-400 dark:text-slate-500" />
@@ -77,7 +77,7 @@ export default function RiskTimeline({ timeline, printMode = false }: RiskTimeli
           </p>
         </div>
 
-        {/* Summary chips */}
+        
         <div className="flex flex-wrap gap-2">
           {counts.tinggi > 0 && (
             <span className="flex items-center gap-1 text-xs font-medium text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">
@@ -100,7 +100,7 @@ export default function RiskTimeline({ timeline, printMode = false }: RiskTimeli
         </div>
       </div>
 
-      {/* Timeline */}
+      
       <div className="px-4 py-3">
         {timeline.map((point, i) => {
           const cfg = RISK[point.risk];
@@ -114,7 +114,7 @@ export default function RiskTimeline({ timeline, printMode = false }: RiskTimeli
               className={`transition-opacity duration-200 ${isDimmed ? "opacity-40" : "opacity-100"}`}
             >
               <div className="flex gap-3">
-                {/* Left: dot + line */}
+                
                 <div className="flex flex-col items-center">
                   <button
                     onClick={() => toggle(i)}
@@ -128,7 +128,7 @@ export default function RiskTimeline({ timeline, printMode = false }: RiskTimeli
                   )}
                 </div>
 
-                {/* Right: content */}
+                
                 <div className="flex-1 pb-3">
                   <button
                     onClick={() => toggle(i)}
@@ -165,7 +165,7 @@ export default function RiskTimeline({ timeline, printMode = false }: RiskTimeli
                     </div>
                   </button>
 
-                  {/* Expanded note */}
+                  
                   {isActive && (
                     <div
                       className={`mt-2 p-3 rounded-xl border text-xs leading-relaxed ${cfg.card} ${cfg.text} ${cfg.glow} animate-in fade-in slide-in-from-top-1 duration-150`}
@@ -180,7 +180,7 @@ export default function RiskTimeline({ timeline, printMode = false }: RiskTimeli
         })}
       </div>
 
-      {/* Footer hint */}
+      
       <p className="text-center text-xs text-slate-300 pb-3">
         Klik bagian manapun untuk lihat detail
       </p>

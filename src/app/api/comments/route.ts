@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateToken } from "@/app/api/token/route";
 import { prisma } from "@/lib/prisma";
+import { checkRate, checkBan, getIp } from "@/lib/security";
 
 export interface Comment {
   id: number;
@@ -37,6 +38,24 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const { valid, error } = validateToken(req);
   if (!valid) return NextResponse.json({ error: error ?? "Unauthorized." }, { status: 401 });
+
+  const ip = getIp(req);
+
+  const ban = checkBan(ip);
+  if (ban.banned) {
+    return NextResponse.json(
+      { error: "Akses diblokir sementara." },
+      { status: 403, headers: { "Retry-After": String(ban.retryAfterSec) } },
+    );
+  }
+
+  const rl = checkRate(`comment:${ip}`, 10, 60_000);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Terlalu banyak komentar. Tunggu sebentar." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
+    );
+  }
 
   try {
     const { report_id, isi } = await req.json();

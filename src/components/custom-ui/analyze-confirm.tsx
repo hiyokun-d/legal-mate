@@ -17,7 +17,7 @@ const features = [
 export default function AnalyzeConfirm({ onConfirm }: AnalyzeConfirmProps) {
   return (
     <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md shadow-slate-200/80 dark:shadow-black/20 space-y-5">
-      {/* Sada greeting */}
+      
       <div className="flex items-start gap-3">
         <SadaAvatar size="md" pulse glow />
         <div className="space-y-0.5">
@@ -33,7 +33,7 @@ export default function AnalyzeConfirm({ onConfirm }: AnalyzeConfirmProps) {
         </div>
       </div>
 
-      {/* Feature list */}
+      
       <div className="space-y-2 pl-1">
         {features.map(({ icon: Icon, text }, i) => (
           <motion.div
@@ -51,7 +51,7 @@ export default function AnalyzeConfirm({ onConfirm }: AnalyzeConfirmProps) {
         ))}
       </div>
 
-      {/* CTA */}
+      
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.97 }}

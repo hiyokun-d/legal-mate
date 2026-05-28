@@ -21,13 +21,13 @@ export default function NewsTicker() {
 
   if (items.length === 0) return null;
 
-  // duplicate so the loop looks seamless
+  
   const doubled = [...items, ...items];
 
   return (
     <div className="w-full bg-red-600 overflow-hidden py-2 border-b border-red-700">
       <div className="flex items-center gap-0">
-        {/* fixed label */}
+        
         <div className="shrink-0 flex items-center gap-2 px-4 bg-red-700 h-full self-stretch mr-3 z-10">
           <span className="relative flex h-2 w-2 shrink-0">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-200 opacity-75" />
@@ -38,7 +38,7 @@ export default function NewsTicker() {
           </span>
         </div>
 
-        {/* scrolling content */}
+        
         <div className="overflow-hidden flex-1">
           <div className="flex gap-8 whitespace-nowrap animate-ticker">
             {doubled.map((item, i) => (

@@ -45,7 +45,7 @@ export default function AnalyzeLoading({ onComplete }: AnalyzeLoadingProps) {
 
   return (
     <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm dark:shadow-black/20">
-      {/* Progress bar top */}
+      
       <div className="h-1 bg-slate-100 dark:bg-slate-800">
         <motion.div
           className="h-full bg-gradient-to-r from-amber-500 to-amber-600"
@@ -56,7 +56,7 @@ export default function AnalyzeLoading({ onComplete }: AnalyzeLoadingProps) {
       </div>
 
       <div className="p-6 space-y-6">
-        {/* Sada header */}
+        
         <div className="flex items-center gap-3">
           <SadaAvatar size="md" pulse glow />
           <div className="space-y-0.5">
@@ -72,7 +72,7 @@ export default function AnalyzeLoading({ onComplete }: AnalyzeLoadingProps) {
           </div>
         </div>
 
-        {/* Steps */}
+        
         <div className="space-y-3">
           {steps.map((step, i) => {
             const done = i < currentStep;
@@ -122,7 +122,7 @@ export default function AnalyzeLoading({ onComplete }: AnalyzeLoadingProps) {
           })}
         </div>
 
-        {/* Footer */}
+        
         <p className="text-[10px] text-slate-400 dark:text-slate-600 text-center">
           Ini mungkin membutuhkan 10–30 detik
         </p>

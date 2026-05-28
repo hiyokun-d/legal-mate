@@ -1,8 +1,3 @@
-/**
- * Secure request utility — Layer 1 + 2 protection
- * Auto-fetch one-time token sebelum setiap request ke API
- */
-
 async function getToken(): Promise<string> {
   const res = await fetch("/api/token", {
     method: "GET",

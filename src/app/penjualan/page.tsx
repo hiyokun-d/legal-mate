@@ -111,7 +111,7 @@ export default function PenjualanPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
-      {/* Nav */}
+      
       <nav className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -124,7 +124,7 @@ export default function PenjualanPage() {
       </nav>
 
       <div className="max-w-5xl mx-auto px-4 py-12 space-y-12">
-        {/* Hero */}
+        
         <div className="text-center space-y-4 max-w-xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-xs font-semibold text-emerald-600 dark:text-emerald-400">
             <PiggyBank className="size-3.5" /> Gratis · Tanpa Login · Privat
@@ -138,9 +138,9 @@ export default function PenjualanPage() {
           </p>
         </div>
 
-        {/* Two options */}
+        
         <div className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-          {/* Buat buku baru */}
+          
           <div className={`${card} p-6 space-y-4 flex flex-col`}>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
@@ -164,7 +164,7 @@ export default function PenjualanPage() {
             </button>
           </div>
 
-          {/* Masuk dengan ID */}
+          
           <div className={`${card} p-6 space-y-4 flex flex-col`}>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
@@ -195,7 +195,7 @@ export default function PenjualanPage() {
           </div>
         </div>
 
-        {/* Recent books */}
+        
         {recentIds.length > 0 && (
           <div className="max-w-2xl mx-auto space-y-2">
             <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">Terakhir Dibuka</p>
@@ -213,7 +213,7 @@ export default function PenjualanPage() {
           </div>
         )}
 
-        {/* Features grid */}
+        
         <div className="max-w-2xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
           {[
             { icon: "📊", label: "Grafik 7 Hari" },

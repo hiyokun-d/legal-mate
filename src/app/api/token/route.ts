@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac, randomUUID } from "crypto";
+import { checkRate, checkBan, getIp, isBrowserRequest } from "@/lib/security";
 
-// Stateless HMAC-signed tokens — works across Vercel serverless instances (no shared Map)
-// Format: base64url(uuid.expiry) + "." + base64url(HMAC-SHA256)
 const SECRET = process.env.KOBOI_API_KEY ?? "dev-secret-not-for-prod";
 const TOKEN_TTL_MS = 60_000;
 
@@ -32,6 +31,28 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 403 });
   }
 
+  if (!isBrowserRequest(req)) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 403 });
+  }
+
+  const ip = getIp(req);
+
+  const ban = checkBan(ip);
+  if (ban.banned) {
+    return NextResponse.json(
+      { error: "Akses diblokir sementara." },
+      { status: 403, headers: { "Retry-After": String(ban.retryAfterSec) } },
+    );
+  }
+
+  const rl = checkRate(`token:${ip}`, 30, 60_000);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Terlalu banyak permintaan. Coba lagi." },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
+    );
+  }
+
   const exp = Date.now() + TOKEN_TTL_MS;
   const raw = `${randomUUID()}|${exp}`;
   const encodedPayload = Buffer.from(raw).toString("base64url");
@@ -40,7 +61,6 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ token });
 }
 
-// Validator — diimpor oleh route lain
 export function validateToken(req: NextRequest): { valid: boolean; error?: string } {
   if (!isOriginAllowed(req)) {
     return { valid: false, error: "Unauthorized origin." };

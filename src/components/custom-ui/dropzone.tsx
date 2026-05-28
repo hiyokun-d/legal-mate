@@ -45,7 +45,7 @@ export default function Dropzone({
     if (e.target.files?.length) { validateAndAdd(Array.from(e.target.files)); e.target.value = ""; }
   };
 
-  const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+  const MAX_FILE_SIZE = 20 * 1024 * 1024; 
 
   const validateAndAdd = (incoming: File[]) => {
     const valid: File[] = [];
@@ -83,7 +83,7 @@ export default function Dropzone({
       onDragLeave={handleDragLeave}
       onDrop={handleDragDrop}
     >
-      {/* Drag border overlay */}
+      
       <motion.div
         animate={{ opacity: isDragging ? 1 : 0 }}
         transition={{ duration: 0.15 }}
@@ -114,7 +114,7 @@ export default function Dropzone({
             }`}
             onClick={() => fileInputRef.current?.click()}
           >
-            {/* Background glow when dragging */}
+            
             <AnimatePresence>
               {isDragging && (
                 <motion.div

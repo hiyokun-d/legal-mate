@@ -150,7 +150,7 @@ export default function AnalyzeResult({
 
   return (
     <div className="w-full max-w-lg space-y-4">
-      {/* Action bar */}
+      
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -210,7 +210,7 @@ export default function AnalyzeResult({
         ))}
       </motion.div>
 
-      {/* ── PDF CAPTURE AREA ── */}
+      
       <motion.div
         ref={printRef}
         variants={stagger.container}
@@ -218,7 +218,7 @@ export default function AnalyzeResult({
         animate="animate"
         className="space-y-4 bg-slate-50 dark:bg-slate-950 p-3 rounded-3xl"
       >
-        {/* Sada header (shows in PDF) */}
+        
         <motion.div variants={stagger.item} transition={itemTransition} className={card}>
           <div className="flex items-center gap-3">
             <SadaAvatar size="md" />
@@ -233,7 +233,7 @@ export default function AnalyzeResult({
           </div>
         </motion.div>
 
-        {/* Scam meter */}
+        
         <motion.div variants={stagger.item} transition={itemTransition} className={`${card} space-y-3`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -263,7 +263,7 @@ export default function AnalyzeResult({
           </div>
         </motion.div>
 
-        {/* Stats */}
+        
         <motion.div variants={stagger.item} transition={itemTransition} className="grid grid-cols-3 gap-3">
           {[
             { val: data.metrics.klausul, label: "Klausul", style: "bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800" },
@@ -281,7 +281,7 @@ export default function AnalyzeResult({
           ))}
         </motion.div>
 
-        {/* Verdict */}
+        
         <motion.div variants={stagger.item} transition={itemTransition} className={`${card} space-y-3`}>
           <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide">Verdict</p>
           {[
@@ -302,7 +302,7 @@ export default function AnalyzeResult({
           ))}
         </motion.div>
 
-        {/* Summary */}
+        
         <motion.div variants={stagger.item} transition={itemTransition} className={`${card} space-y-2`}>
           <div className="flex items-center gap-2">
             <Info className="size-4 text-slate-400 dark:text-slate-500" />
@@ -311,14 +311,14 @@ export default function AnalyzeResult({
           <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{data.summary}</p>
         </motion.div>
 
-        {/* Timeline */}
+        
         {data.timeline?.length > 0 && (
           <motion.div variants={stagger.item} transition={itemTransition}>
             <RiskTimeline timeline={data.timeline} printMode={isDownloading} />
           </motion.div>
         )}
 
-        {/* Red flags */}
+        
         <motion.div variants={stagger.item} transition={itemTransition} className="bg-white dark:bg-slate-900 border-2 border-red-200 dark:border-red-900/60 rounded-2xl p-4 shadow-sm dark:shadow-black/20 space-y-3">
           <div className="flex items-center gap-2">
             <AlertTriangle className="size-4 text-red-500" />
@@ -340,7 +340,7 @@ export default function AnalyzeResult({
           </ul>
         </motion.div>
 
-        {/* Recommendations */}
+        
         <motion.div variants={stagger.item} transition={itemTransition} className="bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-900/60 rounded-2xl p-4 shadow-sm dark:shadow-black/20 space-y-3">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="size-4 text-amber-500" />
@@ -362,7 +362,7 @@ export default function AnalyzeResult({
           </ul>
         </motion.div>
 
-        {/* Safety checklist */}
+        
         {data.safetyChecklist?.length > 0 && (
           <motion.div variants={stagger.item} transition={itemTransition} className="bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-900/50 rounded-2xl p-4 shadow-sm dark:shadow-black/20 space-y-3">
             <div className="flex items-center gap-2">
@@ -387,13 +387,13 @@ export default function AnalyzeResult({
           </motion.div>
         )}
 
-        {/* Risk Calculator */}
+        
         <motion.div variants={stagger.item} transition={itemTransition}>
           <RiskCalculator data={data} />
         </motion.div>
       </motion.div>
 
-      {/* Blacklist form (outside PDF capture area) */}
+      
       <AnimatePresence>
         {showBlacklist && (
           <motion.div
@@ -424,7 +424,7 @@ export default function AnalyzeResult({
         )}
       </AnimatePresence>
 
-      {/* Letter */}
+      
       <AnimatePresence>
         {showLetter && letter && (
           <motion.div
@@ -451,7 +451,7 @@ export default function AnalyzeResult({
         )}
       </AnimatePresence>
 
-      {/* Chat history */}
+      
       {chatHistory.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center gap-2 px-1">

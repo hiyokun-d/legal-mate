@@ -3,6 +3,6 @@ export const ValidFileType = [
   "image/jpg",
   "image/jpeg",
   "image/png",
-  "application/msword", // old file type (doc)
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // new file type (docxl)
+  "application/msword", 
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document", 
 ];

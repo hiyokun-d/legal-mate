@@ -129,10 +129,10 @@ export default function Home() {
 
   return (
     <>
-      {/* ── HEADER ── */}
+      
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/85 dark:bg-[#0A0805]/90 backdrop-blur-xl border-b border-amber-500/10 dark:border-amber-500/15">
         <div className="flex items-center justify-between px-4 h-14">
-          {/* Logo */}
+          
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-6 h-6 rounded-md bg-amber-500 flex items-center justify-center transition-transform group-hover:scale-110">
               <ShieldCheck className="size-3.5 text-white" />
@@ -145,9 +145,9 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Right side */}
+          
           <div className="flex items-center gap-2">
-            {/* Token count */}
+            
             <AnimatePresence>
               {totalTokens > 0 && (
                 <motion.div
@@ -165,7 +165,7 @@ export default function Home() {
 
             <ThemeToggle />
 
-            {/* Reset button */}
+            
             <AnimatePresence>
               {(appState === "ready" || appState === "done") && (
                 <motion.button
@@ -185,7 +185,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* ── MAIN ── */}
+      
       <main className="relative pt-14">
         <Dropzone
           files={files}

@@ -26,7 +26,7 @@ function estimateWorstCase(nominal: number, data: GeminiContractResult): {
   const score = data.scamScore ?? 0;
   const flags = data.redFlags ?? [];
 
-  // Denda keterlambatan
+  
   const hasDenda = flags.some((f) =>
     /denda|keterlambatan|penalti|penalty/i.test(f)
   );
@@ -41,7 +41,7 @@ function estimateWorstCase(nominal: number, data: GeminiContractResult): {
     });
   }
 
-  // Ganti rugi sepihak
+  
   const hasGantiRugi = flags.some((f) =>
     /ganti rugi|kompensasi|klaim|wanprestasi/i.test(f)
   );
@@ -54,7 +54,7 @@ function estimateWorstCase(nominal: number, data: GeminiContractResult): {
     });
   }
 
-  // Penahanan dana / DP hangus
+  
   const hasPenahanan = flags.some((f) =>
     /tahan|hangus|deposit|dp|uang muka|jaminan/i.test(f)
   );
@@ -67,7 +67,7 @@ function estimateWorstCase(nominal: number, data: GeminiContractResult): {
     });
   }
 
-  // Bunga pinjol
+  
   const hasBunga = flags.some((f) => /bunga|interest|cicilan|pinjam/i.test(f));
   if (hasBunga) {
     const monthlyRate = score >= 70 ? 0.1 : 0.03;
@@ -78,7 +78,7 @@ function estimateWorstCase(nominal: number, data: GeminiContractResult): {
     });
   }
 
-  // Default: general risk
+  
   if (results.length === 0) {
     const pct = score >= 70 ? 0.8 : score >= 40 ? 0.4 : 0.15;
     results.push({
@@ -107,7 +107,7 @@ export default function RiskCalculator({ data }: RiskCalculatorProps) {
 
   return (
     <div className={`${card} space-y-3`}>
-      {/* Header */}
+      
       <button
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center justify-between group"
@@ -129,7 +129,7 @@ export default function RiskCalculator({ data }: RiskCalculatorProps) {
             Masukkan nominal kontrak untuk estimasi kerugian worst-case berdasarkan red flags yang ditemukan Sada.
           </p>
 
-          {/* Input */}
+          
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Nilai Kontrak (Rupiah)
@@ -147,7 +147,7 @@ export default function RiskCalculator({ data }: RiskCalculatorProps) {
             </div>
           </div>
 
-          {/* Results */}
+          
           {nominal && results.length > 0 && (
             <div className="space-y-3">
               <div className="space-y-2">
@@ -171,7 +171,7 @@ export default function RiskCalculator({ data }: RiskCalculatorProps) {
                 ))}
               </div>
 
-              {/* Total worst case */}
+              
               <div className="flex items-center justify-between p-3.5 bg-red-50 dark:bg-red-950/30 border-2 border-red-200 dark:border-red-900/60 rounded-xl">
                 <div className="flex items-center gap-2">
                   <TrendingDown className="size-4 text-red-500" />
