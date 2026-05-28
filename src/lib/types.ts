@@ -5,6 +5,9 @@ export interface TimelinePoint {
 }
 
 export interface GeminiContractResult {
+  isLegalDoc: boolean;
+  docType: string;
+  legitimacyNote: string;
   metrics: { klausul: number };
   riskLevel: "Rendah" | "Sedang" | "Tinggi";
   scamScore: number;

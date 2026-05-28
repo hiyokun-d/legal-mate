@@ -150,7 +150,48 @@ export default function AnalyzeResult({
 
   return (
     <div className="w-full max-w-lg space-y-4">
-      
+
+      {data.isLegalDoc === false && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="flex gap-3 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700 rounded-2xl"
+        >
+          <AlertTriangle className="size-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <p className="text-sm font-bold text-amber-800 dark:text-amber-300">
+              Dokumen Ini Bukan Dokumen Hukum Resmi
+            </p>
+            <p className="text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
+              <span className="font-semibold">Terdeteksi sebagai:</span> {data.docType}
+            </p>
+            {data.legitimacyNote && (
+              <p className="text-xs text-amber-600 dark:text-amber-500 leading-relaxed">
+                {data.legitimacyNote}
+              </p>
+            )}
+            <p className="text-xs text-amber-600 dark:text-amber-500 font-medium pt-0.5">
+              ⚠️ Analisis di bawah tetap menunjukkan potensi risiko jika klausul ini diterapkan di dunia nyata.
+            </p>
+          </div>
+        </motion.div>
+      )}
+
+      {data.isLegalDoc === true && data.docType && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="flex items-center gap-2 px-3 py-2 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl"
+        >
+          <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+            Dokumen terverifikasi · <span className="font-normal">{data.docType}</span>
+          </p>
+        </motion.div>
+      )}
+
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}

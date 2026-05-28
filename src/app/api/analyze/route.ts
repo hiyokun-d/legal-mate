@@ -134,8 +134,34 @@ ATURAN OUTPUT — FORMAT JSON MURNI WAJIB
 ════════════════════════════════════════════════════
 Hanya JSON murni. JANGAN gunakan \`\`\`json. Langsung mulai dengan {.
 
+════════════════════════════════════════════════════
+DETEKSI LEGITIMASI DOKUMEN (WAJIB DILAKUKAN PERTAMA)
+════════════════════════════════════════════════════
+Sebelum analisis, tentukan apakah dokumen adalah dokumen hukum/bisnis NYATA.
+
+Dokumen BUKAN legal jika terdeteksi sebagai:
+• Tugas sekolah / kuliah / akademis
+• Esai, makalah, atau karya tulis ilmiah
+• Cerita fiksi, novel, skenario
+• Template kosong tanpa isi nyata
+• Dokumen pribadi non-bisnis (diary, catatan harian)
+• Artikel berita atau blog
+• Kode program / dokumentasi teknis
+
+Dokumen LEGAL VALID jika mengandung:
+• Para pihak dengan nama/jabatan nyata
+• Klausul kewajiban dan hak
+• Tanda tangan / materai / pasal bernomor
+• Nilai transaksi atau jangka waktu
+• Kata kunci: "PERJANJIAN", "KONTRAK", "KESEPAKATAN", "MOU", "PIHAK PERTAMA/KEDUA", "pasal", "ayat"
+
+PENTING: Apapun hasilnya (legal atau tidak), TETAP lakukan analisis penuh untuk potensi risiko dan kerentanan. Dokumen tugas pun bisa mengandung klausul berbahaya jika dipakai di dunia nyata.
+
 MODE 'contract':
 {
+  "isLegalDoc": true,
+  "docType": "Kontrak Kerjasama Bisnis",
+  "legitimacyNote": "Dokumen terverifikasi sebagai dokumen hukum sah dengan para pihak dan klausul yang jelas.",
   "metrics": { "klausul": 12 },
   "riskLevel": "Tinggi",
   "scamScore": 82,
@@ -154,6 +180,9 @@ MODE 'contract':
     { "section": "Pasal 3", "risk": "tinggi", "note": "Denda 5%/hari tanpa batas — berbahaya." }
   ]
 }
+*isLegalDoc: true jika dokumen hukum/bisnis nyata, false jika bukan
+*docType: nama jenis dokumen spesifik dalam bahasa Indonesia (contoh: "Kontrak Sewa", "Tugas Kuliah Hukum Bisnis", "MOU Kerjasama", "Template Kosong")
+*legitimacyNote: 1 kalimat kasual — jelaskan mengapa dokumen dianggap legal/tidak-legal, dan jika tidak legal, apa risikonya jika klausulnya diterapkan di dunia nyata
 *riskLevel: "Rendah" | "Sedang" | "Tinggi"
 *scamScore: 0–100
 *timeline.risk: "tinggi" | "sedang" | "aman", maks 10 item
